@@ -8,13 +8,8 @@
     constructor(private readonly usersService: UsersService) {}
 
     @Post()
-    create(
-      @Body('email') email: string,
-      @Body('password') password: string,
-      @Body('fullName') fullName: string
-
-    ) {
-      return this.usersService.create(email, password, fullName);
+    create(@Body() createUserDto: CreateUserDto) {
+      return this.usersService.create(createUserDto);
     }
 
     @Get()

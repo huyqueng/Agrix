@@ -7,7 +7,6 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    // MongooseModule.forRoot('mongodb+srv://huyqueng_db_user:Vs8eYYwCrgG3nnDw@cluster1.mob2bsp.mongodb.net'),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -15,11 +14,9 @@ import { UsersModule } from './users/users.module';
       }),
       inject: [ConfigService],
     }),
-  
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-  
     UsersModule,
   ],
   controllers: [AppController],

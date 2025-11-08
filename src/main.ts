@@ -10,7 +10,6 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   await app.listen(configService.get<string>('PORT') || 2000);
-  console.log(configService.get<string>('PORT'), error)
 } 
 bootstrap();
   

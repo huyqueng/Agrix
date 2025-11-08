@@ -11,7 +11,6 @@ export class AppController {
 
   @Get()
   getHello() {
-    console.log('check port: ', this.configService.get<string>('PORT'))
     return this.appService.getHello();
   }
 }
