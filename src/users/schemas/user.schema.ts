@@ -25,7 +25,7 @@ export class User {
   @Prop({ trim: true, default: '' })
   avatarUrl: string;
 
-  @Prop({ required: true   })
+  @Prop() 
   createdAt: Date;
 
   @Prop()
