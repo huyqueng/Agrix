@@ -1,12 +1,13 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import bcrypt from 'bcryptjs';
-
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
+    private jwtService: JwtService,
   ) {}
 
   getHashPassword(password: string) {
@@ -27,5 +28,12 @@ export class AuthService {
       if (isPasswordValid === true) return user;
       else return null;
     }
+  }
+
+  async login(user: any) {
+    const payload = { email: user.email, sub: user._id, role: user.role };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
