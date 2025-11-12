@@ -1,27 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
-import bcrypt from "bcryptjs";
+import { AuthService } from 'src/auth/auth.service';
+
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>){ }
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private authService: AuthService,
+  ) {}
 
-  getHashPassword (password: string) {
-      const salt = bcrypt.genSaltSync(10);
-      const hashPassword = bcrypt.hashSync(password, salt);
-      return hashPassword;
-  }
-  
   async create(createUserDto: CreateUserDto) {
-    const hashPassword = this.getHashPassword(createUserDto.password)
+    const hashPassword = this.authService.getHashPassword(
+      createUserDto.password,
+    );
     let user = await this.userModel.create({
       email: createUserDto.email,
       password: hashPassword,
-      fullName: createUserDto.fullName
-    })
+      fullName: createUserDto.fullName,
+    });
     return user;
   }
 
@@ -29,15 +29,19 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(userId: string) {
+    return this.userModel.findById(userId).select('-password');
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  findOneByEmail(email: string) {
+    return this.userModel.findOne({ email });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  update(userId: string, updateUserDto: UpdateUserDto) {
+    return this.userModel.updateOne({ _id: userId }, { ...updateUserDto });
+  }
+
+  remove(userId: string) {
+    return this.userModel.deleteOne({ _id: userId });
   }
 }

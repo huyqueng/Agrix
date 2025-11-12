@@ -17,18 +17,18 @@
       return this.usersService.findAll();
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-      return this.usersService.findOne(+id);
+    @Get(':userId')
+    findOne(@Param('userId') userId: string){
+      return this.usersService.findOne(userId);
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-      return this.usersService.update(+id, updateUserDto);
+    update(@Param('id') userId: string, @Body() updateUserDto: UpdateUserDto) {
+      return this.usersService.update(userId, updateUserDto);
     }
-
+    
     @Delete(':id')
-    remove(@Param('id') id: string) {
-      return this.usersService.remove(+id);
+    remove(@Param('id') userId: string) {
+      return this.usersService.remove(userId);
     }
   }
