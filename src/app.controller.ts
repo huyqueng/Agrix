@@ -11,7 +11,6 @@ import { ConfigService } from '@nestjs/config';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { JWTAuthGuard } from './auth/guards/jwt-auth.guard';
-import { LoginDto } from './auth/dto/login.dto';
 
 @Controller()
 export class AppController {
@@ -27,7 +26,7 @@ export class AppController {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(JWTAuthGuard)
+  // @UseGuards(JWTAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
