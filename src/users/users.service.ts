@@ -23,16 +23,20 @@ export class UsersService {
     const hashPassword = this.authService.getHashPassword(
       createUserDto.password,
     );
+
     let user = await this.userModel.create({
       email: createUserDto.email,
       password: hashPassword,
       fullName: createUserDto.fullName,
+      role: createUserDto.role,
     });
-    return user;
+
+    const { password, ...result } = user.toObject();
+    return result;
   }
 
   findAll() {
-    return `This action returns all users`;
+    return this.userModel.find().select('-password');
   }
 
   findOne(userId: string) {

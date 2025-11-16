@@ -1,7 +1,14 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { RegisterDto } from './dto/register.dto';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -31,9 +38,32 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { email: user.email, sub: user._id, role: user.role };
+    if (!user) {
+      throw new UnauthorizedException('User not authenticated');
+    }
+    const payload = {
+      email: user.email,
+      sub: user._id,
+      role: user.role,
+    };
+
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  //register
+  async register(registerDto: RegisterDto) {
+    const existingUser = await this.usersService.findOneByEmail(
+      registerDto.email,
+    );
+    if (existingUser) {
+      throw new UnauthorizedException(
+        'Email đã tồn tại, vui lòng sử dụng email khác.',
+      );
+    }
+
+    const user = await this.usersService.create(registerDto);
+    return user;
   }
 }

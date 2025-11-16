@@ -5,10 +5,10 @@ export type UserDocument = HydratedDocument<User>;
 
 export enum UserRole {
   USER = 'user',
-  ADMIN = 'admin'
-} 
+  ADMIN = 'admin',
+}
 
-@Schema()
+@Schema({ timestamps: true })
 export class User {
   @Prop({ required: true, unique: true, trim: true, lowercase: true })
   email: string;
@@ -25,7 +25,7 @@ export class User {
   @Prop({ trim: true, default: '' })
   avatarUrl: string;
 
-  @Prop() 
+  @Prop()
   createdAt: Date;
 
   @Prop()
