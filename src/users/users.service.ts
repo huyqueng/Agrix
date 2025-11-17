@@ -48,7 +48,9 @@ export class UsersService {
   }
 
   update(userId: string, updateUserDto: UpdateUserDto) {
-    return this.userModel.updateOne({ _id: userId }, { ...updateUserDto });
+    return this.userModel
+      .updateOne({ _id: userId }, { ...updateUserDto })
+      .select('-password');
   }
 
   remove(userId: string) {
