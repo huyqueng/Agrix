@@ -9,15 +9,15 @@ import {
 import { UserRole } from 'src/users/schemas/user.schema';
 
 export class RegisterDto {
-  @IsEmail()
-  @IsNotEmpty()
+  @IsEmail({}, { message: 'Email không đúng định dạng' })
+  @IsNotEmpty({ message: 'Email không được để trống.' })
   email: string;
 
-  @IsNotEmpty()
-  @MinLength(6)
+  @IsNotEmpty({ message: 'Mật khẩu không được để trống.' })
+  @MinLength(6, { message: 'Mật khẩu phải có ít nhất 6 ký tự' })
   password: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Tên người dùng không được để trống.' })
   @IsString()
   fullName: string;
 }

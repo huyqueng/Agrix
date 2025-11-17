@@ -8,6 +8,7 @@ import { UsersService } from 'src/users/users.service';
 import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
+import { IUSer } from 'src/users/users.interface';
 
 @Injectable()
 export class AuthService {
@@ -37,18 +38,23 @@ export class AuthService {
     }
   }
 
-  async login(user: any) {
-    if (!user) {
-      throw new UnauthorizedException('User not authenticated');
-    }
+  async login(user: IUSer) {
+    const { _id, email, role, fullName } = user;
     const payload = {
-      email: user.email,
-      sub: user._id,
-      role: user.role,
+      sub: 'Token login',
+      iss: 'from server',
+      _id,
+      email,
+      fullName,
+      role,
     };
 
     return {
       access_token: this.jwtService.sign(payload),
+      _id,
+      email,
+      fullName,
+      role,
     };
   }
 

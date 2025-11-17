@@ -1,7 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+// import mongooseDelete, { type SoftDeleteModel } from 'mongoose-delete';
 
 export type UserDocument = HydratedDocument<User>;
+
+// export type UserModel = SoftDeleteModel<UserDocument>;
 
 export enum UserRole {
   USER = 'user',
@@ -24,12 +27,15 @@ export class User {
 
   @Prop({ trim: true, default: '' })
   avatarUrl: string;
-
-  @Prop()
-  createdAt: Date;
-
-  @Prop()
-  updatedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+//soft delete
+// UserSchema.plugin(mongooseDelete, {
+//   deletedAt: true,
+//   deletedBy: true,
+//   overrideMethods: true,
+//   index: true,
+// });
+
+// export { UserSchema };
