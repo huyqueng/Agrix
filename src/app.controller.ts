@@ -8,10 +8,7 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ConfigService } from '@nestjs/config';
-import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { AuthService } from './auth/auth.service';
-import { JWTAuthGuard } from './auth/guards/jwt-auth.guard';
-import { Public } from './decorators/customize';
 
 @Controller()
 export class AppController {

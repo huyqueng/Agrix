@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { IS_PUBLIC_KEY } from 'src/decorators/customize';
+import { IS_PUBLIC_KEY } from 'src/decorators/auth.decorator';
 
 @Injectable()
 export class JWTAuthGuard extends AuthGuard('jwt') {
@@ -25,7 +25,6 @@ export class JWTAuthGuard extends AuthGuard('jwt') {
   }
 
   handleRequest(err, user, info) {
-    // You can throw an exception based on either "info" or "err" arguments
     if (err || !user) {
       throw err || new UnauthorizedException('Token không hợp lệ.');
     }
