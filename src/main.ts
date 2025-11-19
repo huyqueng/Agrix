@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { JWTAuthGuard } from './auth/guards/jwt-auth.guard';
 import { TransformInterceptor } from './core/transform.interceptor';
 import { RolesGuard } from './auth/guards/roles.guard';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -17,6 +18,16 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   app.useGlobalInterceptors(new TransformInterceptor()); // format response
+
+  //build
+  const config = new DocumentBuilder()
+    .setTitle('API')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
+
   await app.listen(configService.get<string>('PORT') || 2000);
 }
 bootstrap();

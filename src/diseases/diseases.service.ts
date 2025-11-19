@@ -10,8 +10,8 @@ export class DiseasesService {
   constructor(
     @InjectModel(Disease.name) private diseaseModel: Model<Disease>,
   ) {}
-  create(createDiseaseDto: CreateDiseaseDto) {
-    return this.diseaseModel.create(createDiseaseDto);
+  async create(createDiseaseDto: CreateDiseaseDto) {
+    return await this.diseaseModel.create(createDiseaseDto);
   }
 
   findAll() {

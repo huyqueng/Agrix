@@ -4,20 +4,20 @@ import mongoose from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Disease {
-  @Prop({ required: true, unique: true, trim: true })
+  @Prop()
   name: string;
 
-  @Prop({ required: true, type: String })
+  @Prop()
   symptoms: string;
 
-  @Prop({ required: true, type: String })
+  @Prop()
   treatment: string;
 
-  @Prop({ type: [String], default: [] })
+  @Prop()
   image_urls: string[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Plant' })
-  plant_id: mongoose.Schema.Types.ObjectId;
+  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Plant' })
+  // plant_id: mongoose.Schema.Types.ObjectId;
 }
 
 export const DiseaseSchema = SchemaFactory.createForClass(Disease);

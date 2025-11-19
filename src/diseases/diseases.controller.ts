@@ -27,8 +27,8 @@ export class DiseasesController {
     return this.diseasesService.findAll();
   }
 
-  @Get(':dieaseId')
-  findOne(@Param('dieaseId') dieaseId: string) {
+  @Get(':diseaseId')
+  findOne(@Param('diseaseId') dieaseId: string) {
     return this.diseasesService.findOne(dieaseId);
   }
 
