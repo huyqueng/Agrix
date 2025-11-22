@@ -11,7 +11,7 @@ import { DiseasesModule } from './diseases/diseases.module';
   imports: [
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         uri: configService.get<string>('MONGO_URL'),
       }),
       inject: [ConfigService],

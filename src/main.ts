@@ -2,11 +2,12 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { JWTAuthGuard } from './auth/guards/jwt-auth.guard';
 import { TransformInterceptor } from './core/transform.interceptor';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -17,9 +18,24 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  app.useGlobalInterceptors(new TransformInterceptor()); // format response
+  //format response
+  app.useGlobalInterceptors(new TransformInterceptor());
 
-  //build
+  app.setGlobalPrefix('api');
+
+  //config cookie
+  app.use(cookieParser());
+
+  //api version
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
+
+  //cors
+  app.enableCors();
+
+  //api documentation
   const config = new DocumentBuilder()
     .setTitle('API')
     .setVersion('1.0')

@@ -9,6 +9,8 @@ import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import { IUSer } from 'src/users/users.interface';
+import { ConfigService } from '@nestjs/config';
+import { config } from 'dotenv';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +18,7 @@ export class AuthService {
     @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   getHashPassword(password: string) {
@@ -44,17 +47,21 @@ export class AuthService {
       sub: 'Token login',
       iss: 'from server',
       _id,
-      email,
       fullName,
       role,
     };
 
+    const refresh_token = this.creatRefreshToken(payload);
+
     return {
       access_token: this.jwtService.sign(payload),
-      _id,
-      email,
-      fullName,
-      role,
+      refresh_token,
+      user: {
+        id: payload._id,
+        email,
+        fullName,
+        role,
+      },
     };
   }
 
@@ -71,5 +78,13 @@ export class AuthService {
 
     const user = await this.usersService.create(registerDto);
     return user;
+  }
+
+  creatRefreshToken(payload: any) {
+    const refresh_token = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+      expiresIn: '1d',
+    });
+    return refresh_token;
   }
 }
