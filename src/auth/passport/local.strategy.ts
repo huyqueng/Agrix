@@ -17,6 +17,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException('Email hoặc mật khẩu không hợp lệ.');
     }
+
+    // const { password, ...safeUser } = user.toObject();
     return user;
   }
 }

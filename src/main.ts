@@ -4,10 +4,10 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { JWTAuthGuard } from './auth/guards/jwt-auth.guard';
-import { TransformInterceptor } from './core/transform.interceptor';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

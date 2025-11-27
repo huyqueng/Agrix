@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { RESPONSE_MESSAGE_KEY } from 'src/common/decorators/response-message.decorator';
 
 export interface Response<T> {
   statusCode: number;
@@ -21,10 +22,15 @@ export class TransformInterceptor<T>
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<Response<T>> {
+    const customMessage = Reflect.getMetadata(
+      RESPONSE_MESSAGE_KEY,
+      context.getHandler(),
+    );
+
     return next.handle().pipe(
       map((data) => ({
         statusCode: context.switchToHttp().getResponse().statusCode,
-        message: data.message,
+        message: customMessage,
         data,
       })),
     );

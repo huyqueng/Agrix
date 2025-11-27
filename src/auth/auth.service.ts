@@ -51,7 +51,7 @@ export class AuthService {
       role,
     };
 
-    const refresh_token = this.creatRefreshToken(payload);
+    const refresh_token = this.createRefreshToken(payload);
 
     return {
       access_token: this.jwtService.sign(payload),
@@ -67,23 +67,14 @@ export class AuthService {
 
   //register
   async register(registerDto: RegisterDto) {
-    const existingUser = await this.usersService.findOneByEmail(
-      registerDto.email,
-    );
-    if (existingUser) {
-      throw new UnauthorizedException(
-        'Email đã tồn tại, vui lòng sử dụng email khác.',
-      );
-    }
-
     const user = await this.usersService.create(registerDto);
     return user;
   }
 
-  creatRefreshToken(payload: any) {
+  createRefreshToken(payload: any) {
     const refresh_token = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
-      expiresIn: '1d',
+      expiresIn: '30d',
     });
     return refresh_token;
   }

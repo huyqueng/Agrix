@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -20,6 +21,16 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
+    const existingUser = await this.userModel.findOne({
+      email: createUserDto.email,
+    });
+
+    if (existingUser) {
+      throw new UnauthorizedException(
+        'Email đã tồn tại, vui lòng sử dụng email khác.',
+      );
+    }
+
     const hashPassword = this.authService.getHashPassword(
       createUserDto.password,
     );

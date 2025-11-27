@@ -11,8 +11,10 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRole } from './schemas/user.schema';
-import { Roles } from 'src/decorators/auth.decorator';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Public, Roles } from 'src/auth/auth.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+// import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
@@ -20,6 +22,7 @@ export class UsersController {
 
   @Roles(UserRole.ADMIN)
   @Post()
+  @ResponseMessage('Thêm mới người dùng thành công')
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
@@ -29,6 +32,7 @@ export class UsersController {
   findAll() {
     return this.usersService.findAll();
   }
+
   @Roles(UserRole.ADMIN)
   @Get(':userId')
   findOne(@Param('userId') userId: string) {
