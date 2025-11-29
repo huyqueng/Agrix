@@ -16,8 +16,7 @@ import { AuthService } from 'src/auth/auth.service';
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    @Inject(forwardRef(() => AuthService))
-    private authService: AuthService,
+    @Inject(forwardRef(() => AuthService)) private authService: AuthService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {

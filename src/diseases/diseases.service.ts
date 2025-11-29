@@ -11,7 +11,12 @@ export class DiseasesService {
     @InjectModel(Disease.name) private diseaseModel: Model<Disease>,
   ) {}
   async create(createDiseaseDto: CreateDiseaseDto) {
-    return await this.diseaseModel.create(createDiseaseDto);
+    try {
+      return await this.diseaseModel.create(createDiseaseDto);
+    } catch (error) {
+      console.log(error);
+    }
+    // return await this.diseaseModel.create(createDiseaseDto);
   }
 
   findAll() {

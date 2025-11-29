@@ -47,6 +47,7 @@ export class AuthService {
       sub: 'Token login',
       iss: 'from server',
       _id,
+      email,
       fullName,
       role,
     };

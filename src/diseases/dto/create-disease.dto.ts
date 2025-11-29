@@ -4,7 +4,6 @@ import {
   IsArray,
   IsUrl,
   IsOptional,
-  IsMongoId,
 } from 'class-validator';
 
 export class CreateDiseaseDto {

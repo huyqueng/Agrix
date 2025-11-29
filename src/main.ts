@@ -8,6 +8,7 @@ import { RolesGuard } from './auth/guards/roles.guard';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -18,15 +19,16 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
+  app.useGlobalFilters(new HttpExceptionFilter());
+
   //format response
   app.useGlobalInterceptors(new TransformInterceptor());
-
-  app.setGlobalPrefix('api');
 
   //config cookie
   app.use(cookieParser());
 
   //api version
+  app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',
