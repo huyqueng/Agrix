@@ -4,11 +4,10 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { IUSer, UsersService } from 'src/users/users.service';
 import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
-import { IUSer } from 'src/users/users.interface';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 

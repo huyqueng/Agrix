@@ -12,6 +12,14 @@ import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
 
+export interface IUSer {
+  _id: string;
+  email: string;
+  password: string;
+  role: string;
+  fullName: string;
+}
+
 @Injectable()
 export class UsersService {
   constructor(

@@ -6,18 +6,21 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PlantsService } from './plants.service';
 import { CreatePlantDto } from './dto/create-plant.dto';
 import { UpdatePlantDto } from './dto/update-plant.dto';
 import { Public } from 'src/auth/auth.decorator';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('plants')
 export class PlantsController {
   constructor(private readonly plantsService: PlantsService) {}
 
   @Public()
-  @Post()
+  @Post('create')
+  @UseInterceptors(FilesInterceptor('file'))
   create(@Body() createPlantDto: CreatePlantDto) {
     return this.plantsService.create(createPlantDto);
   }

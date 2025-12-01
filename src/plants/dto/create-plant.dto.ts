@@ -15,8 +15,8 @@ export class CreatePlantDto {
   @IsString()
   description?: string;
 
-  @IsNotEmpty({ message: 'Ảnh của cây không được để trống.' })
-  @IsOptional()
-  @IsUrl({}, { each: true })
-  imageUrl: string;
+  // @IsNotEmpty({ message: 'Ảnh của cây không được để trống.' })
+  // @IsOptional()
+  // @IsUrl({}, { each: true })
+  // imageUrl: string;
 }

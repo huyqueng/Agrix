@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreatePlantDto } from './dto/create-plant.dto';
 import { UpdatePlantDto } from './dto/update-plant.dto';
 import { Plant } from './entities/plant.entity';
@@ -8,13 +8,13 @@ import { Model } from 'mongoose';
 @Injectable()
 export class PlantsService {
   constructor(@InjectModel(Plant.name) private plantModel: Model<Plant>) {}
-  create(createPlantDto: CreatePlantDto) {
-    const existingPlant = this.plantModel.findOne({
-      name: createPlantDto.name,
+  async create(createPlantDto: CreatePlantDto) {
+    const existingPlant = await this.plantModel.findOne({
+      name: { $regex: '^' + createPlantDto.name.trim() + '$', $options: 'i' },
     });
-    // if (existingPlant) {
-    //   return;
-    // }
+    if (existingPlant) {
+      throw new ConflictException('Cây trồng đã tồn tại.');
+    }
     return this.plantModel.create(createPlantDto);
   }
 
