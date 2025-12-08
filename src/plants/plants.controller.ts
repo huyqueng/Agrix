@@ -7,22 +7,28 @@ import {
   Param,
   Delete,
   UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { PlantsService } from './plants.service';
 import { CreatePlantDto } from './dto/create-plant.dto';
 import { UpdatePlantDto } from './dto/update-plant.dto';
 import { Public } from 'src/auth/auth.decorator';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImageValidationPipe } from 'src/common/pipes/image-validation.pipe';
 
 @Controller('plants')
 export class PlantsController {
   constructor(private readonly plantsService: PlantsService) {}
 
+  //Thêm mới
   @Public()
   @Post('create')
-  @UseInterceptors(FilesInterceptor('file'))
-  create(@Body() createPlantDto: CreatePlantDto) {
-    return this.plantsService.create(createPlantDto);
+  @UseInterceptors(FileInterceptor('image'))
+  create(
+    @Body() createPlantDto: CreatePlantDto,
+    @UploadedFile(ImageValidationPipe) image: Express.Multer.File,
+  ) {
+    return this.plantsService.create(createPlantDto, image);
   }
 
   @Get()

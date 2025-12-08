@@ -1,17 +1,26 @@
-import { Injectable } from '@nestjs/common';
-import { CreateFileDto } from './dto/create-file.dto';
-import { UpdateFileDto } from './dto/update-file.dto';
-import { v2 as cloudinary } from 'cloudinary';
+import { Inject, Injectable } from '@nestjs/common';
+import { CLOUDINARY } from 'src/config/cloudinary.config';
+import streamifier from 'streamifier';
+// import { v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class FilesService {
-  async uploadImage(file: Express.Multer.File) {
-    const result = await cloudinary.uploader.upload(file.path, {
-      folder: 'plants',
-      resource_type: 'image',
-    });
+  constructor(@Inject(CLOUDINARY) private cloudinary) {}
 
-    return result.url;
+  async uploadImage(file: Express.Multer.File) {
+    return new Promise((resolve, reject) => {
+      const stream = this.cloudinary.uploader.upload_stream(
+        {
+          folder: 'plants',
+          resource_type: 'image',
+        },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result.url);
+        },
+      );
+      streamifier.createReadStream(file.buffer).pipe(stream);
+    });
   }
 
   // findAll() {

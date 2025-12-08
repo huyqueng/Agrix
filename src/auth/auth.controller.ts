@@ -49,8 +49,7 @@ export class AuthController {
     return user;
   }
 
-  // @ApiResponse({ status: 201, description: 'Đăng kí thành công' })
-  // @ApiResponse({ status: 401, description: 'Đăng kí thất bại' })
+  //Dang ky
   @Public()
   @Post('register')
   @ResponseMessage('Đăng kí thành công')

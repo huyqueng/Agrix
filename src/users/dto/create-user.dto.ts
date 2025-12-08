@@ -23,6 +23,8 @@ export class CreateUserDto {
   fullName: string;
 
   @IsOptional()
-  @IsEnum(UserRole, { message: 'Role phải là user hoặc admin' })
+  @IsEnum(UserRole, {
+    message: 'Vai trò phải là Quản trị viên hoặc Người dùng.',
+  })
   role?: UserRole;
 }

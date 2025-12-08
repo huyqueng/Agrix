@@ -8,8 +8,8 @@ export class Plant {
   @Prop({ trim: true, default: '' })
   description: string;
 
-  // @Prop({ required: true, trim: true })
-  // imageUrl: string;
+  @Prop({ required: true, trim: true })
+  image: string;
 }
 
 export const PlantSchema = SchemaFactory.createForClass(Plant);
