@@ -7,7 +7,6 @@ import {
   IsOptional,
   IsEnum,
 } from 'class-validator';
-import { UserRole } from 'src/users/schemas/user.schema';
 
 export class RegisterDto {
   @IsEmail({}, { message: 'Email không đúng định dạng' })

@@ -12,13 +12,12 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LoginDto } from './dto/login.dto';
-import { Public } from 'src/auth/auth.decorator';
-import { UserRole } from 'src/users/schemas/user.schema';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import type { Response } from 'express';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Public } from './auth.decorator';
+import { ResponseMessage } from 'common/decorators/response-message.decorator';
 
 @Controller('auth')
 export class AuthController {

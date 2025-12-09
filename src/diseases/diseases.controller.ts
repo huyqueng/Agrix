@@ -10,7 +10,7 @@ import {
 import { DiseasesService } from './diseases.service';
 import { CreateDiseaseDto } from './dto/create-disease.dto';
 import { UpdateDiseaseDto } from './dto/update-disease.dto';
-import { Public } from 'src/auth/auth.decorator';
+import { Public } from 'auth/auth.decorator';
 
 @Controller('diseases')
 export class DiseasesController {

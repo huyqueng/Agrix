@@ -3,10 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DiseasesModule } from './diseases/diseases.module';
-import { PlantsModule } from './plants/plants.module';
+import { PlantsModule } from './modules/plants/plants.module';
 import { FilesModule } from './files/files.module';
 
 @Module({

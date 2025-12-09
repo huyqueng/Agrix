@@ -1,15 +1,9 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { IUSer, UsersService } from 'src/users/users.service';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import { ConfigService } from '@nestjs/config';
-import { config } from 'dotenv';
+import { IUSer, UsersService } from '@modules/users/users.service';
 
 @Injectable()
 export class AuthService {

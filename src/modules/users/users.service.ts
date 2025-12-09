@@ -10,7 +10,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from 'auth/auth.service';
 
 export interface IUSer {
   _id: string;

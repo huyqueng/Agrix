@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CLOUDINARY } from 'src/config/cloudinary.config';
+import { CLOUDINARY } from 'config/cloudinary.config';
 import streamifier from 'streamifier';
 // import { v2 as cloudinary } from 'cloudinary';
 

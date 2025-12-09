@@ -11,8 +11,9 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRole } from './schemas/user.schema';
-import { Roles } from 'src/auth/auth.decorator';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { Roles } from 'auth/auth.decorator';
+import { ResponseMessage } from 'common/decorators/response-message.decorator';
+
 // import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('users')

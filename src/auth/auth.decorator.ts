@@ -1,6 +1,6 @@
+import { UserRole } from '@modules/users/schemas/user.schema';
 import { SetMetadata } from '@nestjs/common';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { UserRole } from 'src/users/schemas/user.schema';
 
 //Public
 export const IS_PUBLIC_KEY = 'isPublic';

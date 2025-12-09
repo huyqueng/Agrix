@@ -14,9 +14,9 @@ import {
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Public } from 'src/auth/auth.decorator';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { ImageValidationPipe } from 'src/common/pipes/image-validation.pipe';
+import { ResponseMessage } from 'common/decorators/response-message.decorator';
+import { ImageValidationPipe } from 'common/pipes/image-validation.pipe';
+import { Public } from 'auth/auth.decorator';
 
 @Controller('files')
 export class FilesController {
