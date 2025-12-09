@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { DiseasesModule } from './diseases/diseases.module';
+import { DiseasesModule } from './modules/diseases/diseases.module';
 import { PlantsModule } from './modules/plants/plants.module';
 import { FilesModule } from './files/files.module';
 
