@@ -20,7 +20,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Roles(UserRole.ADMIN)
-  @Post()
+  @Post('create')
   @ResponseMessage('Thêm mới người dùng thành công')
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
