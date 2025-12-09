@@ -10,6 +10,9 @@ export class Plant {
 
   @Prop({ required: true, trim: true })
   image: string;
+
+  // @Prop({ type: Array, default: [] })
+  // diseases: Object[];
 }
 
 export const PlantSchema = SchemaFactory.createForClass(Plant);
