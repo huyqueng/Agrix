@@ -1,17 +1,14 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Request, Get, Body } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ConfigService } from '@nestjs/config';
+import { Public } from './auth/auth.decorator';
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private configService: ConfigService
-  ) { }
+  constructor(private readonly appService: AppService) {}
 
+  // @Public()
   @Get()
-  getHello() {
-    console.log('check port: ', this.configService.get<string>('PORT'))
+  getHello(): string {
     return this.appService.getHello();
   }
 }
