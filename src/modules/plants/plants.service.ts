@@ -9,7 +9,7 @@ import { UpdatePlantDto } from './dto/update-plant.dto';
 import { Plant } from './entities/plant.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { FilesService } from 'src/files/files.service';
+import { FilesService } from 'files/files.service';
 
 @Injectable()
 export class PlantsService {

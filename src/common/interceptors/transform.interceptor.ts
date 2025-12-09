@@ -4,9 +4,9 @@ import {
   ExecutionContext,
   CallHandler,
 } from '@nestjs/common';
+import { RESPONSE_MESSAGE_KEY } from 'common/decorators/response-message.decorator';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { RESPONSE_MESSAGE_KEY } from 'src/common/decorators/response-message.decorator';
 
 export interface Response<T> {
   statusCode: number;
