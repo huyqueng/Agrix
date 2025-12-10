@@ -7,7 +7,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DiseasesModule } from './modules/diseases/diseases.module';
 import { PlantsModule } from './modules/plants/plants.module';
-import { FilesModule } from './files/files.module';
+import { FilesModule } from '@modules/files/files.module';
 
 @Module({
   imports: [

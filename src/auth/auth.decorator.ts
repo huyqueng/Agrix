@@ -1,4 +1,4 @@
-import { UserRole } from '@modules/users/schemas/user.schema';
+import { UserRole } from '@modules/users/entities/user.entity';
 import { SetMetadata } from '@nestjs/common';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 

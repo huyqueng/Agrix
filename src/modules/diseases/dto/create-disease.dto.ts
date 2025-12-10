@@ -7,24 +7,21 @@ import {
 } from 'class-validator';
 
 export class CreateDiseaseDto {
-  // @IsNotEmpty({ message: 'Tên bệnh không được để trống.' })
-  // @IsString()
+  @IsNotEmpty({ message: 'Tên bệnh không được để trống.' })
   name: string;
 
-  // @IsNotEmpty({ message: 'Triệu chứng không được để trống.' })
-  // @IsString()
+  @IsNotEmpty({ message: 'Triệu chứng không được để trống.' })
   symptoms: string;
 
-  // @IsNotEmpty({ message: 'Phương pháp điều trị không được để trống.' })
-  // @IsString()
+  @IsNotEmpty({ message: 'Phương pháp điều trị không được để trống.' })
   treatment: string;
 
-  // @IsNotEmpty({ message: 'Vui lòng chọn cây trồng' })
+  @IsNotEmpty({ message: 'Vui lòng chọn cây trồng' })
   // @IsMongoId({ message: 'plant_id không hợp lệ' })
-  plant_id?: string;
+  plantId: string;
 
   @IsOptional()
   @IsArray()
   @IsUrl({}, { each: true })
-  image_urls?: string[];
+  images?: string[];
 }

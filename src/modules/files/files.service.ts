@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CLOUDINARY } from 'config/cloudinary.config';
 import streamifier from 'streamifier';
-// import { v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class FilesService {
@@ -21,6 +20,10 @@ export class FilesService {
       );
       streamifier.createReadStream(file.buffer).pipe(stream);
     });
+  }
+
+  uploadImages(files: Express.Multer.File[]) {
+    return Promise.all(files.map((file) => this.uploadImage(file)));
   }
 
   // findAll() {
