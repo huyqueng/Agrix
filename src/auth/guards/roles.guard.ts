@@ -1,4 +1,4 @@
-import { UserRole } from '@modules/users/schemas/user.schema';
+import { UserRole } from '@modules/users/entities/user.entity';
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from 'auth/auth.decorator';

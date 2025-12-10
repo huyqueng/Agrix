@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
 import mongoose from 'mongoose';
 
 @Schema({ timestamps: true })
@@ -14,10 +13,13 @@ export class Disease {
   treatment: string;
 
   @Prop()
-  image_urls: string[];
+  images: string[];
 
-  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Plant' })
-  // plant_id: mongoose.Schema.Types.ObjectId;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Plant' })
+  plantId: mongoose.Schema.Types.ObjectId;
+
+  // @Prop()
+  // plantName: string;
 }
 
 export const DiseaseSchema = SchemaFactory.createForClass(Disease);

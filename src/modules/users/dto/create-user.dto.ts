@@ -6,7 +6,7 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { UserRole } from '../schemas/user.schema';
+import { UserRole } from '../entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 //data transfer object
