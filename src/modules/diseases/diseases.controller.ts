@@ -16,7 +16,7 @@ import { UpdateDiseaseDto } from './dto/update-disease.dto';
 import { Public } from 'auth/auth.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ResponseMessage } from 'common/decorators/response-message.decorator';
-import { response } from 'express';
+import { ImageValidationPipe } from 'common/pipes/image-validation.pipe';
 
 @Controller('diseases')
 export class DiseasesController {
@@ -28,7 +28,7 @@ export class DiseasesController {
   @UseInterceptors(FilesInterceptor('images', 5))
   create(
     @Body() createDiseaseDto: CreateDiseaseDto,
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles(ImageValidationPipe) images: Express.Multer.File[],
   ) {
     return this.diseasesService.create(createDiseaseDto, images);
   }
@@ -47,13 +47,20 @@ export class DiseasesController {
     return this.diseasesService.findOne(diseaseId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDiseaseDto: UpdateDiseaseDto) {
-    return this.diseasesService.update(+id, updateDiseaseDto);
+  @Public()
+  @UseInterceptors(FilesInterceptor('images', 5))
+  @Patch('edit/:id')
+  @ResponseMessage('Cập nhật thông tin bệnh cây trồng thành công')
+  update(
+    @Param('id') diseaseId: string,
+    @Body() updateDiseaseDto: UpdateDiseaseDto,
+    @UploadedFiles(ImageValidationPipe) images?: Express.Multer.File[],
+  ) {
+    return this.diseasesService.update(diseaseId, updateDiseaseDto, images);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.diseasesService.remove(+id);
+  remove(@Param('id') diseaseId: string) {
+    return this.diseasesService.remove(diseaseId);
   }
 }

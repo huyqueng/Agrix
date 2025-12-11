@@ -17,11 +17,8 @@ export class CreateDiseaseDto {
   treatment: string;
 
   @IsNotEmpty({ message: 'Vui lòng chọn cây trồng' })
-  // @IsMongoId({ message: 'plant_id không hợp lệ' })
   plantId: string;
 
   @IsOptional()
-  @IsArray()
-  @IsUrl({}, { each: true })
   images?: string[];
 }

@@ -43,7 +43,7 @@ export class PlantsController {
     return this.plantsService.findOne(plantId);
   }
 
-  @Patch(':id')
+  @Patch('edit/:id')
   @UseInterceptors(FileInterceptor('image'))
   @ResponseMessage('Cập nhật thông tin cây trồng thành công')
   update(
