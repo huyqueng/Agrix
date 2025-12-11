@@ -88,7 +88,6 @@ export class PlantsService {
     try {
       if (image) {
         const imageUrl = (await this.filesService.uploadImage(image)) as string;
-        console.log(imageUrl);
         return this.plantModel.updateOne(
           { _id: plantId },
           { ...updatePlantDto, image: imageUrl },

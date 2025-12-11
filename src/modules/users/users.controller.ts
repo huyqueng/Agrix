@@ -41,7 +41,7 @@ export class UsersController {
     return this.usersService.findOne(userId);
   }
 
-  @Patch(':id')
+  @Patch('edit/:id')
   @ResponseMessage('Cập nhật thông tin người dùng thành công')
   update(@Param('id') userId: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(userId, updateUserDto);

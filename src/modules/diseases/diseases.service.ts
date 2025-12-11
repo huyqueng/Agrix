@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   ConflictException,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -53,16 +52,9 @@ export class DiseasesService {
         images,
       )) as string[];
 
-      // const newDisease = await this.diseaseModel.create({
-      //   ...creatediseaseDto,
-      //   plant: plant._id,
-      //   images: imgUrls,
-      // });
-
       return await this.diseaseModel.create({
         ...creatediseaseDto,
         plantId: plant._id,
-        // plantName: plant.name,
         images: imgUrls,
       });
     } catch (error) {
@@ -71,18 +63,76 @@ export class DiseasesService {
   }
 
   findAll(plantId: string) {
+    const plant = this.plantModel.findById(plantId);
+    if (!plant) {
+      throw new NotFoundException('Cây trồng không tồn tại.');
+    }
     return this.diseaseModel.find({ plantId: plantId });
   }
 
   findOne(id: string) {
-    return this.diseaseModel.findById(id);
+    const disease = this.diseaseModel.findById(id);
+    if (!disease) {
+      throw new NotFoundException('Bệnh không tồn tại.');
+    }
+    return disease;
   }
 
-  update(id: number, updateDiseaseDto: UpdateDiseaseDto) {
-    return `This action updates a #${id} disease`;
+  async update(
+    dieaseId: string,
+    updateDiseaseDto: UpdateDiseaseDto,
+    images?: Express.Multer.File[],
+  ) {
+    const disease = await this.diseaseModel.findById(dieaseId);
+
+    if (!disease) {
+      throw new NotFoundException('Không tìm thấy bệnh cây trồng.');
+    }
+
+    //Check duplicate name
+    if (
+      updateDiseaseDto.name &&
+      updateDiseaseDto.name.trim() !== disease.name
+    ) {
+      const existingDisease = await this.plantModel.findOne({
+        name: {
+          $regex: '^' + updateDiseaseDto.name.trim() + '$',
+          $options: 'i',
+        },
+      });
+
+      if (existingDisease) {
+        throw new ConflictException('Bệnh đã tồn tại.');
+      }
+    }
+
+    // Update without images
+    if (!images) {
+      const currentImgs = disease.images;
+      return this.diseaseModel.updateOne(
+        { _id: dieaseId },
+        { ...updateDiseaseDto, images: currentImgs },
+      );
+    }
+
+    // Update with new images
+    try {
+      if (images) {
+        const imageUrls = (await this.filesService.uploadImages(
+          images,
+        )) as string[];
+
+        return this.diseaseModel.updateOne(
+          { _id: dieaseId },
+          { ...updateDiseaseDto, image: imageUrls },
+        );
+      }
+    } catch (error) {
+      throw new BadRequestException('Cập nhật bệnh cây trồng thất bại.');
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} disease`;
+  remove(diseaseId: string) {
+    return this.diseaseModel.deleteOne({ _id: diseaseId });
   }
 }
