@@ -40,9 +40,19 @@ export class AuthController {
   ) {
     const user = await this.authService.login(req.user);
 
+    // // set access token cookie (httpOnly) and refresh token cookie
+    res.cookie('access_token', user.access_token, {
+      httpOnly: true,
+      maxAge: 15 * 60 * 1000, // 15m
+      sameSite: 'lax',
+      secure: true,
+    });
+
     res.cookie('refresh_token', user.refresh_token, {
       httpOnly: true,
-      maxAge: 26 * 60 * 60 * 1000, //1d
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30d
+      sameSite: 'lax',
+      secure: true,
     });
 
     return user;
@@ -61,6 +71,7 @@ export class AuthController {
   @ResponseMessage('Đăng xuất thành công')
   async logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('refresh_token');
+    res.clearCookie('access_token');
     return;
   }
 
@@ -83,10 +94,17 @@ export class AuthController {
         { expiresIn: '15m' }, // access token ngắn
       );
 
+      // set new access token cookie
+      res.cookie('access_token', newAccessToken, {
+        httpOnly: true,
+        maxAge: 5 * 1000, // 15m
+        sameSite: 'lax',
+        secure: true,
+      });
+
       return { access_token: newAccessToken };
     } catch (error) {
       res.clearCookie('refresh_token');
-      // throw new UnauthorizedException('Refresh token invalid');
     }
   }
 }

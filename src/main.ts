@@ -8,7 +8,6 @@ import { RolesGuard } from './auth/guards/roles.guard';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -34,8 +33,8 @@ async function bootstrap() {
     defaultVersion: '1',
   });
 
-  //cors
-  app.enableCors();
+  //cors - allow credentials so browser can send cookies
+  app.enableCors({ origin: true, credentials: true });
 
   //api documentation
   const config = new DocumentBuilder()
