@@ -8,7 +8,7 @@ export class LoginDto {
   @ApiProperty({ example: 'superuser@gmail.com' })
   email: string;
 
-  @ApiProperty({ example: '123456' })
+  @ApiProperty({ example: 'abc@123' })
   @IsNotEmpty({ message: 'Mật khẩu không được để trống.' })
   password: string;
 }

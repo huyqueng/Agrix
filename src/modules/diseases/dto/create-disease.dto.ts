@@ -24,6 +24,12 @@ export class CreateDiseaseDto {
   @ApiProperty({ example: '60f7c0c2b4d1c826d8f0a5b4' })
   plantId: string;
 
-  @IsOptional()
-  images?: string[];
+  @ApiProperty({
+    example: [
+      'https://example.com/image1.jpg',
+      'https://example.com/image2.jpg',
+    ],
+    description: 'Danh sách URL hình ảnh minh họa cho bệnh',
+  })
+  images: string[];
 }

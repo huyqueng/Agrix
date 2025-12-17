@@ -23,8 +23,7 @@ import { UserRole } from '@modules/roles/roles.service';
 export class DiseasesController {
   constructor(private readonly diseasesService: DiseasesService) {}
 
-  // @Roles(UserRole.ADMIN)
-
+  @Roles(UserRole.ADMIN)
   @Post('create')
   @ResponseMessage('Thêm mới bệnh cây trồng thành công')
   @UseInterceptors(FilesInterceptor('images', 5))
@@ -35,21 +34,19 @@ export class DiseasesController {
     return this.diseasesService.create(createDiseaseDto, images);
   }
 
-  @Public()
   @ResponseMessage('Lấy danh sách bệnh cây trồng thành công')
   @Get()
   findAll(@Query('plantId') plantId: string) {
     return this.diseasesService.findAll(plantId);
   }
 
-  @Public()
   @ResponseMessage('Lấy thông tin bệnh cây trồng thành công')
   @Get(':diseaseId')
   findOne(@Param('diseaseId') diseaseId: string) {
     return this.diseasesService.findOne(diseaseId);
   }
 
-  @Public()
+  @Roles(UserRole.ADMIN)
   @UseInterceptors(FilesInterceptor('images', 5))
   @Patch('edit/:id')
   @ResponseMessage('Cập nhật thông tin bệnh cây trồng thành công')
@@ -61,6 +58,7 @@ export class DiseasesController {
     return this.diseasesService.update(diseaseId, updateDiseaseDto, images);
   }
 
+  @Roles(UserRole.ADMIN)
   @Delete(':id')
   remove(@Param('id') diseaseId: string) {
     return this.diseasesService.remove(diseaseId);

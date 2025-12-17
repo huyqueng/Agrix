@@ -9,22 +9,23 @@ import * as AutoIncrementFactory from 'mongoose-sequence';
 
 @Module({
   imports: [
-    MongooseModule.forFeatureAsync([
-      {
-        name: User.name,
-        useFactory: (connection: Connection) => {
-          const schema = UserSchema;
-          const AutoIncrement = AutoIncrementFactory(connection);
-          schema.plugin(AutoIncrement, {
-            inc_field: 'id',
-            start_seq: 1,
-            increment_by: 1,
-          });
-          return schema;
-        },
-        inject: [getConnectionToken()],
-      },
-    ]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    // MongooseModule.forFeatureAsync([
+    //   {
+    //     name: User.name,
+    //     useFactory: (connection: Connection) => {
+    //       const schema = UserSchema;
+    //       const AutoIncrement = AutoIncrementFactory(connection);
+    //       schema.plugin(AutoIncrement, {
+    //         inc_field: 'id',
+    //         start_seq: 1,
+    //         increment_by: 1,
+    //       });
+    //       return schema;
+    //     },
+    //     inject: [getConnectionToken()],
+    //   },
+    // ]),
     forwardRef(() => AuthModule),
   ],
   controllers: [UsersController],
