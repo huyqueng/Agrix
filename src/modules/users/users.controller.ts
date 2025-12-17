@@ -37,19 +37,19 @@ export class UsersController {
   @Roles(UserRole.ADMIN)
   @ResponseMessage('Lấy thống tin người dùng thành công')
   @Get(':userId')
-  findOne(@Param('userId') userId: string) {
+  findOne(@Param('userId') userId: number) {
     return this.usersService.findOne(userId);
   }
 
   @Patch('edit/:id')
   @ResponseMessage('Cập nhật thông tin người dùng thành công')
-  update(@Param('id') userId: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') userId: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(userId, updateUserDto);
   }
 
   @Delete(':id')
   @ResponseMessage('Xóa người dùng thành công')
-  remove(@Param('id') userId: string) {
+  remove(@Param('id') userId: number) {
     return this.usersService.remove(userId);
   }
 }

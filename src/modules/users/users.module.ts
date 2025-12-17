@@ -4,28 +4,26 @@ import { UsersController } from './users.controller';
 import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
 import { AuthModule } from 'auth/auth.module';
+import { AutoIncrementID } from '@typegoose/auto-increment';
 import { Connection } from 'mongoose';
-import * as AutoIncrementFactory from 'mongoose-sequence';
-
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    // MongooseModule.forFeatureAsync([
-    //   {
-    //     name: User.name,
-    //     useFactory: (connection: Connection) => {
-    //       const schema = UserSchema;
-    //       const AutoIncrement = AutoIncrementFactory(connection);
-    //       schema.plugin(AutoIncrement, {
-    //         inc_field: 'id',
-    //         start_seq: 1,
-    //         increment_by: 1,
-    //       });
-    //       return schema;
-    //     },
-    //     inject: [getConnectionToken()],
-    //   },
-    // ]),
+    // MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeatureAsync([
+      {
+        name: User.name,
+        useFactory: (connection: Connection) => {
+          const schema = UserSchema;
+          schema.plugin(AutoIncrementID, {
+            field: 'userId', // Tên field cần auto-increment
+            startAt: 1, // Bắt đầu từ 1
+            incrementBy: 1, // Tăng 1 mỗi lần
+          });
+          return schema;
+        },
+        inject: [getConnectionToken()], // Inject connection mặc định
+      },
+    ]),
     forwardRef(() => AuthModule),
   ],
   controllers: [UsersController],
