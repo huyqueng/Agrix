@@ -10,9 +10,9 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserRole } from './entities/user.entity';
-import { Roles } from 'auth/auth.decorator';
+import { Public, Roles } from 'auth/auth.decorator';
 import { ResponseMessage } from 'common/decorators/response-message.decorator';
+import { UserRole } from '@modules/roles/roles.service';
 
 // import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 

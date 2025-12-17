@@ -1,5 +1,10 @@
-import { UserRole } from '@modules/users/entities/user.entity';
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { UserRole } from '@modules/roles/roles.service';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from 'auth/auth.decorator';
 
@@ -16,6 +21,9 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     const { user } = context.switchToHttp().getRequest();
-    return requiredRoles.includes(user.role);
+    if (!user || !requiredRoles.includes(user.role)) {
+      throw new ForbiddenException('Bạn không có quyền truy cập chức năng này');
+    }
+    return true;
   }
 }

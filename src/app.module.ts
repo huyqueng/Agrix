@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { DiseasesModule } from './modules/diseases/diseases.module';
 import { PlantsModule } from './modules/plants/plants.module';
 import { FilesModule } from '@modules/files/files.module';
+import { Roles } from 'auth/auth.decorator';
+import { RolesModule } from '@modules/roles/roles.module';
 
 @Module({
   imports: [
@@ -26,6 +28,7 @@ import { FilesModule } from '@modules/files/files.module';
     DiseasesModule,
     PlantsModule,
     FilesModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -13,16 +13,18 @@ import {
 import { DiseasesService } from './diseases.service';
 import { CreateDiseaseDto } from './dto/create-disease.dto';
 import { UpdateDiseaseDto } from './dto/update-disease.dto';
-import { Public } from 'auth/auth.decorator';
+import { Public, Roles } from 'auth/auth.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ResponseMessage } from 'common/decorators/response-message.decorator';
 import { ImageValidationPipe } from 'common/pipes/image-validation.pipe';
+import { UserRole } from '@modules/roles/roles.service';
 
 @Controller('diseases')
 export class DiseasesController {
   constructor(private readonly diseasesService: DiseasesService) {}
 
-  @Public()
+  // @Roles(UserRole.ADMIN)
+
   @Post('create')
   @ResponseMessage('Thêm mới bệnh cây trồng thành công')
   @UseInterceptors(FilesInterceptor('images', 5))

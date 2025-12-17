@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsString,
@@ -8,15 +9,19 @@ import {
 
 export class CreateDiseaseDto {
   @IsNotEmpty({ message: 'Tên bệnh không được để trống.' })
+  @ApiProperty({ example: 'Bệnh phấn trắng' })
   name: string;
 
   @IsNotEmpty({ message: 'Triệu chứng không được để trống.' })
+  @ApiProperty({ example: 'Phấn trắng, sương mai, thán thư, thối gốc' })
   symptoms: string;
 
   @IsNotEmpty({ message: 'Phương pháp điều trị không được để trống.' })
+  @ApiProperty({ example: 'Sử dụng thuốc trừ nấm, vệ sinh đồng ruộng' })
   treatment: string;
 
   @IsNotEmpty({ message: 'Vui lòng chọn cây trồng' })
+  @ApiProperty({ example: '60f7c0c2b4d1c826d8f0a5b4' })
   plantId: string;
 
   @IsOptional()
