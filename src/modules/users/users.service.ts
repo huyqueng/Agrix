@@ -1,7 +1,9 @@
 import {
+  ConflictException,
   forwardRef,
   Inject,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,21 +29,13 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    // //Check duplicate ID
-    // const existingId = await this.userModel.findOne({ id: createUserDto.id });
-    // if (existingId) {
-    //   throw new UnauthorizedException(
-    //     'ID đã tồn tại, vui lòng sử dụng ID khác.',
-    //   );
-    // }
-
     //Check duplicate email
     const existingUser = await this.userModel.findOne({
       email: createUserDto.email,
     });
 
     if (existingUser) {
-      throw new UnauthorizedException(
+      throw new ConflictException(
         'Email đã tồn tại, vui lòng sử dụng email khác.',
       );
     }
@@ -52,7 +46,6 @@ export class UsersService {
     );
 
     let user = await this.userModel.create({
-      // id: createUserDto.id,
       email: createUserDto.email,
       password: hashPassword,
       fullName: createUserDto.fullName,
@@ -67,45 +60,57 @@ export class UsersService {
     return this.userModel.find().select('-password');
   }
 
-  findOne(userId: string) {
-    return this.userModel.findById(userId).select('-password');
+  async findOne(userId: number) {
+    const user = await this.userModel.findOne({ userId }).select('-password');
+    if (!user) {
+      throw new NotFoundException('Người dùng không tồn tại.');
+    }
+    return user;
   }
 
   findOneByEmail(email: string) {
     return this.userModel.findOne({ email });
   }
 
-  async update(userId: string, updateUserDto: UpdateUserDto) {
-    // const existingId = await this.userModel.findOne({ id: updateUserDto.id });
-    // if (existingId) {
-    //   throw new UnauthorizedException(
-    //     'ID đã tồn tại, vui lòng sử dụng ID khác.',
-    //   );
-    // }
+  async update(userId: number, updateUserDto: UpdateUserDto) {
+    const user = await this.findOne(userId);
+    if (!user) {
+      throw new NotFoundException('Người dùng không tồn tại.');
+    }
 
-    const existingEmail = await this.userModel.findOne({
-      email: updateUserDto.email,
-    });
+    //Check duplicate email
+    if (updateUserDto.email) {
+      const existingEmail = await this.userModel.findOne({
+        email: updateUserDto.email,
+        userId: { $ne: userId },
+      });
 
-    if (existingEmail && existingEmail._id.toString() !== userId) {
-      throw new UnauthorizedException(
-        'Email đã tồn tại, vui lòng sử dụng email khác.',
-      );
+      if (existingEmail) {
+        throw new ConflictException(
+          'Email đã tồn tại, vui lòng sử dụng email khác.',
+        );
+      }
     }
 
     if (updateUserDto.password) {
-      updateUserDto.password = this.authService.getHashPassword(
+      updateUserDto.password = await this.authService.getHashPassword(
         updateUserDto.password,
       );
     }
 
-    return this.userModel.updateOne(
-      { _id: userId },
-      { ...updateUserDto, password: updateUserDto.password },
+    //Update user
+    const updatedUser = await this.userModel.updateOne(
+      { userId },
+      {
+        ...updateUserDto,
+        password: updateUserDto.password,
+      },
     );
+
+    return updatedUser;
   }
 
-  remove(userId: string) {
-    return this.userModel.deleteOne({ _id: userId });
+  remove(userId: number) {
+    return this.userModel.deleteOne({ userId });
   }
 }
