@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ timestamps: true })
 export class Plant {
-  // @Prop({ unique: true })
-  // plantId: number;
+  @Prop({ unique: true, trim: true })
+  plantId: Number;
 
   @Prop({ required: true, trim: true })
   name: string;

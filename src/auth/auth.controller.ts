@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Post,
   Req,
@@ -16,7 +17,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { Public } from './auth.decorator';
+import { Public, User } from './auth.decorator';
 import { ResponseMessage } from 'common/decorators/response-message.decorator';
 
 @Controller('auth')
@@ -97,7 +98,7 @@ export class AuthController {
       // set new access token cookie
       res.cookie('access_token', newAccessToken, {
         httpOnly: true,
-        maxAge: 5 * 1000, // 15m
+        maxAge: 15 * 60 * 1000, // 15m
         sameSite: 'lax',
         secure: true,
       });
@@ -111,5 +112,10 @@ export class AuthController {
   @Post('forget-password')
   async forgetPassword(@Body() email: string) {
     return this.authService.forgetPassword(email);
+  }
+
+  @Get('me')
+  getMe(@User() user) {
+    return { user };
   }
 }
