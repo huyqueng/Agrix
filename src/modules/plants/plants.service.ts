@@ -18,7 +18,7 @@ export class PlantsService {
     private readonly filesService: FilesService,
   ) {}
 
-  async create(createPlantDto: CreatePlantDto, image: Express.Multer.File) {
+  async create(createPlantDto: CreatePlantDto) {
     const existingPlant = await this.plantModel.findOne({
       name: { $regex: '^' + createPlantDto.name.trim() + '$', $options: 'i' },
     });
@@ -26,17 +26,17 @@ export class PlantsService {
     if (existingPlant) {
       throw new ConflictException('Cây trồng đã tồn tại.');
     }
+    return await this.plantModel.create(createPlantDto);
+    // if (!image) {
+    //   throw new BadRequestException('Vui lòng gửi ảnh của cây.');
+    // }
 
-    if (!image) {
-      throw new BadRequestException('Vui lòng gửi ảnh của cây.');
-    }
-
-    try {
-      const imgUrl = await this.filesService.uploadImage(image);
-      return this.plantModel.create({ ...createPlantDto, image: imgUrl });
-    } catch (error) {
-      throw new BadRequestException('Tải ảnh lên thất bại.');
-    }
+    // try {
+    //   // const imgUrl = await this.filesService.uploadImage(image);
+    //   return this.plantModel.create({ ...createPlantDto });
+    // } catch (error) {
+    //   throw new BadRequestException('Tải ảnh lên thất bại.');
+    // }
   }
 
   async findAll() {
@@ -56,7 +56,7 @@ export class PlantsService {
   async update(
     plantId: string,
     updatePlantDto: UpdatePlantDto,
-    image?: Express.Multer.File,
+    // image?: Express.Multer.File,
   ) {
     const plant = await this.plantModel.findById(plantId);
 
@@ -75,27 +75,29 @@ export class PlantsService {
       }
     }
 
+    return this.plantModel.updateOne({ _id: plantId }, updatePlantDto);
+
     // Update without image
-    if (!image) {
-      const currentImg = plant.image;
-      return this.plantModel.updateOne(
-        { _id: plantId },
-        { ...updatePlantDto, image: currentImg },
-      );
-    }
+    // if (!image) {
+    //   const currentImg = plant.image;
+    //   return this.plantModel.updateOne(
+    //     { _id: plantId },
+    //     { ...updatePlantDto, image: currentImg },
+    //   );
+    // }
 
     // Update with new image
-    try {
-      if (image) {
-        const imageUrl = (await this.filesService.uploadImage(image)) as string;
-        return this.plantModel.updateOne(
-          { _id: plantId },
-          { ...updatePlantDto, image: imageUrl },
-        );
-      }
-    } catch (error) {
-      throw new BadRequestException('Cập nhật cây trồng thất bại.');
-    }
+    // try {
+    //   if (image) {
+    //     const imageUrl = (await this.filesService.uploadImage(image)) as string;
+    //     return this.plantModel.updateOne(
+    //       { _id: plantId },
+    //       { ...updatePlantDto, image: imageUrl },
+    //     );
+    //   }
+    // } catch (error) {
+    //   throw new BadRequestException('Cập nhật cây trồng thất bại.');
+    // }
   }
 
   async remove(plantId: string) {

@@ -18,10 +18,10 @@ export class CreatePlantDto {
   @IsString()
   description?: string;
 
-  @ApiProperty({
-    example: 'image1.jpg',
-    description:
-      'Gửi kèm file ảnh khi tạo cây trồng, data trả ra sẽ là đường dẫn ảnh',
-  })
-  image: string;
+  // @ApiProperty({
+  //   example: 'image1.jpg',
+  //   description:
+  //     'Gửi kèm file ảnh khi tạo cây trồng, data trả ra sẽ là đường dẫn ảnh',
+  // })
+  // image: string;
 }
