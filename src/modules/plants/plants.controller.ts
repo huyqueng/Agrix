@@ -24,13 +24,13 @@ export class PlantsController {
   //Thêm mới
 
   @Post('create')
-  @UseInterceptors(FileInterceptor('image'))
+  // @UseInterceptors(FileInterceptor('image'))
   @ResponseMessage('Thêm mới cây trồng thành công')
   create(
     @Body() createPlantDto: CreatePlantDto,
-    @UploadedFile(ImageValidationPipe) image: Express.Multer.File,
+    // @UploadedFile(ImageValidationPipe) image: Express.Multer.File,
   ) {
-    return this.plantsService.create(createPlantDto, image);
+    return this.plantsService.create(createPlantDto);
   }
 
   @Get()
@@ -44,14 +44,14 @@ export class PlantsController {
   }
 
   @Patch('edit/:id')
-  @UseInterceptors(FileInterceptor('image'))
+  // @UseInterceptors(FileInterceptor('image'))
   @ResponseMessage('Cập nhật thông tin cây trồng thành công')
   update(
-    @Param('id') id: string,
+    @Param('id') plantId: string,
     @Body() updatePlantDto: UpdatePlantDto,
-    @UploadedFile(ImageValidationPipe) image?: Express.Multer.File,
+    // @UploadedFile(ImageValidationPipe) image?: Express.Multer.File,
   ) {
-    return this.plantsService.update(id, updatePlantDto, image);
+    return this.plantsService.update(plantId, updatePlantDto);
   }
 
   @Delete(':id')

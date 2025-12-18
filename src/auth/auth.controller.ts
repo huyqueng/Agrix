@@ -107,4 +107,9 @@ export class AuthController {
       res.clearCookie('refresh_token');
     }
   }
+
+  @Post('forget-password')
+  async forgetPassword(@Body() email: string) {
+    return this.authService.forgetPassword(email);
+  }
 }

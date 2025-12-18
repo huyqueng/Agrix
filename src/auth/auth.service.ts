@@ -72,4 +72,6 @@ export class AuthService {
     });
     return refresh_token;
   }
+
+  forgetPassword(email: string) {}
 }
