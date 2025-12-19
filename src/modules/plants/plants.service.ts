@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -9,13 +8,13 @@ import { UpdatePlantDto } from './dto/update-plant.dto';
 import { Plant } from './entities/plant.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { FilesService } from '@modules/files/files.service';
+import { Counter } from '../../shared/counter.entity';
 
 @Injectable()
 export class PlantsService {
   constructor(
     @InjectModel(Plant.name) private plantModel: Model<Plant>,
-    private readonly filesService: FilesService,
+    @InjectModel(Counter.name) private counterModel: Model<Counter>,
   ) {}
 
   async create(createPlantDto: CreatePlantDto) {
@@ -26,17 +25,16 @@ export class PlantsService {
     if (existingPlant) {
       throw new ConflictException('Cây trồng đã tồn tại.');
     }
-    return await this.plantModel.create(createPlantDto);
-    // if (!image) {
-    //   throw new BadRequestException('Vui lòng gửi ảnh của cây.');
-    // }
+    const counter = await this.counterModel.findOneAndUpdate(
+      { _id: 'plantId' },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true },
+    );
 
-    // try {
-    //   // const imgUrl = await this.filesService.uploadImage(image);
-    //   return this.plantModel.create({ ...createPlantDto });
-    // } catch (error) {
-    //   throw new BadRequestException('Tải ảnh lên thất bại.');
-    // }
+    return this.plantModel.create({
+      plantId: counter.seq,
+      ...createPlantDto,
+    });
   }
 
   async findAll() {
@@ -45,20 +43,14 @@ export class PlantsService {
 
   async findOne(plantId: string) {
     const plant = await this.plantModel.findById(plantId);
-
     if (!plant) {
       throw new NotFoundException('Không tìm thấy cây trồng');
     }
-
     return plant;
   }
 
-  async update(
-    plantId: string,
-    updatePlantDto: UpdatePlantDto,
-    // image?: Express.Multer.File,
-  ) {
-    const plant = await this.plantModel.findById(plantId);
+  async update(plantId: number, updatePlantDto: UpdatePlantDto) {
+    const plant = await this.plantModel.findOne({ plantId });
 
     if (!plant) {
       throw new NotFoundException('Không tìm thấy cây trồng.');
@@ -75,37 +67,15 @@ export class PlantsService {
       }
     }
 
-    return this.plantModel.updateOne({ _id: plantId }, updatePlantDto);
-
-    // Update without image
-    // if (!image) {
-    //   const currentImg = plant.image;
-    //   return this.plantModel.updateOne(
-    //     { _id: plantId },
-    //     { ...updatePlantDto, image: currentImg },
-    //   );
-    // }
-
-    // Update with new image
-    // try {
-    //   if (image) {
-    //     const imageUrl = (await this.filesService.uploadImage(image)) as string;
-    //     return this.plantModel.updateOne(
-    //       { _id: plantId },
-    //       { ...updatePlantDto, image: imageUrl },
-    //     );
-    //   }
-    // } catch (error) {
-    //   throw new BadRequestException('Cập nhật cây trồng thất bại.');
-    // }
+    return this.plantModel.updateOne({ plantId }, updatePlantDto);
   }
 
   async remove(plantId: string) {
-    const plant = await this.plantModel.findById(plantId);
+    const plant = await this.plantModel.findOne({ plantId });
 
     if (!plant) {
       throw new NotFoundException('Không tìm thấy cây trồng.');
     }
-    return this.plantModel.deleteOne({ _id: plantId });
+    return this.plantModel.deleteOne({ plantId });
   }
 }

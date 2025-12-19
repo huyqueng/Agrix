@@ -12,6 +12,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
 import { Model } from 'mongoose';
 import { AuthService } from 'auth/auth.service';
+import { Counter } from 'shared/counter.entity';
 
 export interface IUSer {
   _id: string;
@@ -25,6 +26,7 @@ export interface IUSer {
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Counter.name) private counterModel: Model<Counter>,
     @Inject(forwardRef(() => AuthService)) private authService: AuthService,
   ) {}
 
@@ -45,7 +47,14 @@ export class UsersService {
       createUserDto.password,
     );
 
+    const counter = await this.counterModel.findOneAndUpdate(
+      { _id: 'userId' },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true },
+    );
+
     let user = await this.userModel.create({
+      userId: counter.seq,
       email: createUserDto.email,
       password: hashPassword,
       fullName: createUserDto.fullName,

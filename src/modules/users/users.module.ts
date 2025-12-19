@@ -6,24 +6,11 @@ import { User, UserSchema } from './entities/user.entity';
 import { AuthModule } from 'auth/auth.module';
 import { AutoIncrementID } from '@typegoose/auto-increment';
 import { Connection } from 'mongoose';
+import { Counter, CounterSchema } from 'shared/counter.entity';
 @Module({
   imports: [
-    // MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    MongooseModule.forFeatureAsync([
-      {
-        name: User.name,
-        useFactory: (connection: Connection) => {
-          const schema = UserSchema;
-          schema.plugin(AutoIncrementID, {
-            field: 'userId', // Tên field cần auto-increment
-            startAt: 1, // Bắt đầu từ 1
-            incrementBy: 1, // Tăng 1 mỗi lần
-          });
-          return schema;
-        },
-        inject: [getConnectionToken()], // Inject connection mặc định
-      },
-    ]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: Counter.name, schema: CounterSchema }]),
     forwardRef(() => AuthModule),
   ],
   controllers: [UsersController],

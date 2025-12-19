@@ -21,15 +21,9 @@ import { ImageValidationPipe } from 'common/pipes/image-validation.pipe';
 export class PlantsController {
   constructor(private readonly plantsService: PlantsService) {}
 
-  //Thêm mới
-
   @Post('create')
-  // @UseInterceptors(FileInterceptor('image'))
   @ResponseMessage('Thêm mới cây trồng thành công')
-  create(
-    @Body() createPlantDto: CreatePlantDto,
-    // @UploadedFile(ImageValidationPipe) image: Express.Multer.File,
-  ) {
+  create(@Body() createPlantDto: CreatePlantDto) {
     return this.plantsService.create(createPlantDto);
   }
 
@@ -38,25 +32,23 @@ export class PlantsController {
     return this.plantsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') plantId: string) {
+  @Get(':plantId')
+  findOne(@Param('plantId') plantId: string) {
     return this.plantsService.findOne(plantId);
   }
 
-  @Patch('edit/:id')
-  // @UseInterceptors(FileInterceptor('image'))
+  @Patch('edit/:plantId')
   @ResponseMessage('Cập nhật thông tin cây trồng thành công')
   update(
-    @Param('id') plantId: string,
+    @Param('plantId') plantId: number,
     @Body() updatePlantDto: UpdatePlantDto,
-    // @UploadedFile(ImageValidationPipe) image?: Express.Multer.File,
   ) {
     return this.plantsService.update(plantId, updatePlantDto);
   }
 
-  @Delete(':id')
+  @Delete(':plantId')
   @ResponseMessage('Xóa cây trồng thành công')
-  remove(@Param('id') plantId: string) {
+  remove(@Param('plantId') plantId: string) {
     return this.plantsService.remove(plantId);
   }
 }
