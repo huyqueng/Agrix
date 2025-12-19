@@ -119,7 +119,12 @@ export class UsersService {
     return updatedUser;
   }
 
-  remove(userId: number) {
+  async remove(userId: number) {
+    const user = await this.userModel.findOne({ userId });
+
+    if (!user) {
+      throw new NotFoundException('Không tìm thấy người dùng.');
+    }
     return this.userModel.deleteOne({ userId });
   }
 }

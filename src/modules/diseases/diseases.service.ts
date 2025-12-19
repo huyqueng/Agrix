@@ -11,6 +11,7 @@ import { Disease } from './entities/disease.entity';
 import { Model } from 'mongoose';
 import { FilesService } from '@modules/files/files.service';
 import { Plant } from '@modules/plants/entities/plant.entity';
+import { Counter } from 'shared/counter.entity';
 
 @Injectable()
 export class DiseasesService {
@@ -18,6 +19,7 @@ export class DiseasesService {
     @InjectModel(Disease.name) private diseaseModel: Model<Disease>,
     private readonly filesService: FilesService,
     @InjectModel(Plant.name) private readonly plantModel: Model<Plant>,
+    @InjectModel(Counter.name) private counterModel: Model<Counter>,
   ) {}
   //create disease
   async create(
@@ -36,9 +38,8 @@ export class DiseasesService {
     }
 
     const plant = await this.plantModel
-      .findById(creatediseaseDto.plantId)
+      .findOne({ plantId: creatediseaseDto.plantId })
       .select('name');
-    console.log(plant);
     if (!plant) {
       throw new NotFoundException('Cây trồng không tồn tại.');
     }
@@ -52,9 +53,16 @@ export class DiseasesService {
         images,
       )) as string[];
 
+      const counter = await this.counterModel.findOneAndUpdate(
+        { _id: 'diseaseId' },
+        { $inc: { seq: 1 } },
+        { new: true, upsert: true },
+      );
+
       return await this.diseaseModel.create({
+        diseaseId: counter.seq,
         ...creatediseaseDto,
-        plantId: plant._id,
+        plantId: creatediseaseDto.plantId,
         images: imgUrls,
       });
     } catch (error) {
@@ -62,16 +70,20 @@ export class DiseasesService {
     }
   }
 
-  findAll(plantId: string) {
-    const plant = this.plantModel.findById(plantId);
+  findAll() {
+    return this.diseaseModel.find();
+  }
+
+  async getDiseasesByPlant(plantId: number) {
+    const plant = await this.plantModel.findOne({ plantId });
     if (!plant) {
       throw new NotFoundException('Cây trồng không tồn tại.');
     }
-    return this.diseaseModel.find({ plantId: plantId });
+    return this.diseaseModel.find({ plantId });
   }
 
-  findOne(id: string) {
-    const disease = this.diseaseModel.findById(id);
+  findOne(diseaseId: number) {
+    const disease = this.diseaseModel.findOne({ diseaseId });
     if (!disease) {
       throw new NotFoundException('Bệnh không tồn tại.');
     }
@@ -79,12 +91,11 @@ export class DiseasesService {
   }
 
   async update(
-    dieaseId: string,
+    diseaseId: number,
     updateDiseaseDto: UpdateDiseaseDto,
     images?: Express.Multer.File[],
   ) {
-    const disease = await this.diseaseModel.findById(dieaseId);
-
+    const disease = await this.diseaseModel.findOne({ diseaseId });
     if (!disease) {
       throw new NotFoundException('Không tìm thấy bệnh cây trồng.');
     }
@@ -110,29 +121,35 @@ export class DiseasesService {
     if (!images) {
       const currentImgs = disease.images;
       return this.diseaseModel.updateOne(
-        { _id: dieaseId },
-        { ...updateDiseaseDto, images: currentImgs },
+        { diseaseId },
+        {
+          ...updateDiseaseDto,
+          images: currentImgs,
+        },
       );
     }
-
-    // Update with new images
     try {
-      if (images) {
-        const imageUrls = (await this.filesService.uploadImages(
-          images,
-        )) as string[];
+      const imageUrls = (await this.filesService.uploadImages(
+        images,
+      )) as string[];
 
-        return this.diseaseModel.updateOne(
-          { _id: dieaseId },
-          { ...updateDiseaseDto, image: imageUrls },
-        );
-      }
+      return this.diseaseModel.updateOne(
+        { diseaseId },
+        {
+          ...updateDiseaseDto,
+          images: imageUrls,
+        },
+      );
     } catch (error) {
       throw new BadRequestException('Cập nhật bệnh cây trồng thất bại.');
     }
   }
 
-  remove(diseaseId: string) {
-    return this.diseaseModel.deleteOne({ _id: diseaseId });
+  async remove(diseaseId: number) {
+    const disease = await this.diseaseModel.findOne({ diseaseId });
+    if (!disease) {
+      throw new NotFoundException('Không tìm thấy bệnh cây trồng.');
+    }
+    return this.diseaseModel.deleteOne({ diseaseId });
   }
 }

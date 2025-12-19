@@ -4,6 +4,9 @@ import mongoose from 'mongoose';
 @Schema({ timestamps: true })
 export class Disease {
   @Prop()
+  diseaseId: number;
+
+  @Prop()
   name: string;
 
   @Prop()
@@ -15,8 +18,8 @@ export class Disease {
   @Prop()
   images: string[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Plant' })
-  plantId: mongoose.Schema.Types.ObjectId;
+  @Prop()
+  plantId: number;
 
   // @Prop()
   // plantName: string;

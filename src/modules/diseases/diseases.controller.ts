@@ -34,15 +34,22 @@ export class DiseasesController {
     return this.diseasesService.create(createDiseaseDto, images);
   }
 
-  @ResponseMessage('Lấy danh sách bệnh cây trồng thành công')
+  @Roles(UserRole.ADMIN)
   @Get()
-  findAll(@Query('plantId') plantId: string) {
-    return this.diseasesService.findAll(plantId);
+  @ResponseMessage('Lấy danh sách bệnh cây trồng thành công')
+  findAll() {
+    return this.diseasesService.findAll();
+  }
+
+  @Get('by-plant')
+  @ResponseMessage('Lấy danh sách bệnh theo cây trồng thành công')
+  getDiseasesByPlant(@Query('plantId') plantId: number) {
+    return this.diseasesService.getDiseasesByPlant(plantId);
   }
 
   @ResponseMessage('Lấy thông tin bệnh cây trồng thành công')
   @Get(':diseaseId')
-  findOne(@Param('diseaseId') diseaseId: string) {
+  findOne(@Param('diseaseId') diseaseId: number) {
     return this.diseasesService.findOne(diseaseId);
   }
 
@@ -51,7 +58,7 @@ export class DiseasesController {
   @Patch('edit/:id')
   @ResponseMessage('Cập nhật thông tin bệnh cây trồng thành công')
   update(
-    @Param('id') diseaseId: string,
+    @Param('id') diseaseId: number,
     @Body() updateDiseaseDto: UpdateDiseaseDto,
     @UploadedFiles(ImageValidationPipe) images?: Express.Multer.File[],
   ) {
@@ -59,8 +66,8 @@ export class DiseasesController {
   }
 
   @Roles(UserRole.ADMIN)
-  @Delete(':id')
-  remove(@Param('id') diseaseId: string) {
+  @Delete(':diseaseId')
+  remove(@Param('diseaseId') diseaseId: number) {
     return this.diseasesService.remove(diseaseId);
   }
 }
