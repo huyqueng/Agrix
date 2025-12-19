@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema({ timestamps: true })
 export class Plant {
   @Prop({ unique: true, trim: true })
-  plantId: Number;
+  plantId: number;
 
   @Prop({ required: true, trim: true })
   name: string;

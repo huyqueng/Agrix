@@ -7,24 +7,12 @@ import { FilesModule } from '@modules/files/files.module';
 import { AutoIncrementID } from '@typegoose/auto-increment';
 import { Connection, Mongoose } from 'mongoose';
 
+import AutoIncrementFactory from 'mongoose-sequence';
+import { Counter, CounterSchema } from '../../shared/counter.entity';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Plant.name, schema: PlantSchema }]),
-    // MongooseModule.forFeatureAsync([
-    //   {
-    //     name: Plant.name,
-    //     useFactory: (connection: Connection) => {
-    //       const schema = PlantSchema;
-    //       schema.plugin(AutoIncrementID, {
-    //         field: 'plantId', // Tên field cần auto-increment
-    //         startAt: 1, // Bắt đầu từ 1
-    //         incrementBy: 1, // Tăng 1 mỗi lần
-    //       });
-    //       return schema;
-    //     },
-    //     inject: [getConnectionToken()], // Inject connection mặc định
-    //   },
-    // ]),
+    MongooseModule.forFeature([{ name: Counter.name, schema: CounterSchema }]),
     // FilesModule,
   ],
   controllers: [PlantsController],
