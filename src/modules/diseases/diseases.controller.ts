@@ -34,7 +34,6 @@ export class DiseasesController {
     return this.diseasesService.create(createDiseaseDto, images);
   }
 
-  @Roles(UserRole.ADMIN)
   @Get()
   @ResponseMessage('Lấy danh sách bệnh cây trồng thành công')
   findAll(@Query('page') currentPage: number, @Query('limit') limit: number) {

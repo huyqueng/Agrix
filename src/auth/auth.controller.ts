@@ -19,6 +19,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Public, User } from './auth.decorator';
 import { ResponseMessage } from 'common/decorators/response-message.decorator';
+import type { IUSer } from '@modules/users/users.service';
 
 @Controller('auth')
 export class AuthController {
@@ -117,10 +118,5 @@ export class AuthController {
   @Post('forget-password')
   async forgetPassword(@Body() email: string) {
     return this.authService.forgetPassword(email);
-  }
-
-  @Get('me')
-  getMe(@User() user) {
-    return { user };
   }
 }
