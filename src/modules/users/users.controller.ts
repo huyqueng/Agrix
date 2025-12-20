@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -30,8 +31,8 @@ export class UsersController {
   @Roles(UserRole.ADMIN)
   @ResponseMessage('Lấy danh sách người dùng thành công')
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query('page') currentPage: number, @Query('limit') limit: number) {
+    return this.usersService.findAll(currentPage, limit);
   }
 
   @Roles(UserRole.ADMIN)
