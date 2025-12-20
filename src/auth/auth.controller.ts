@@ -91,7 +91,12 @@ export class AuthController {
       });
 
       const newAccessToken = this.jwtService.sign(
-        { _id: payload._id, fullName: payload.fullName, role: payload.role },
+        {
+          _id: payload._id,
+          email: payload.email,
+          fullName: payload.fullName,
+          role: payload.role,
+        },
         { expiresIn: '15m' }, // access token ngắn
       );
 

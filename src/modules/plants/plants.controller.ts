@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Res,
+  Query,
 } from '@nestjs/common';
 import { PlantsService } from './plants.service';
 import { CreatePlantDto } from './dto/create-plant.dto';
@@ -28,8 +29,9 @@ export class PlantsController {
   }
 
   @Get()
-  findAll() {
-    return this.plantsService.findAll();
+  @ResponseMessage('Lấy danh sách cây trồng')
+  findAll(@Query('page') currentPage: number, @Query('limit') limit: number) {
+    return this.plantsService.findAll(currentPage, limit);
   }
 
   @Get(':plantId')

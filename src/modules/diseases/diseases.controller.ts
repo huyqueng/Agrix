@@ -37,28 +37,32 @@ export class DiseasesController {
   @Roles(UserRole.ADMIN)
   @Get()
   @ResponseMessage('Lấy danh sách bệnh cây trồng thành công')
-  findAll() {
-    return this.diseasesService.findAll();
+  findAll(@Query('page') currentPage: number, @Query('limit') limit: number) {
+    return this.diseasesService.findAll(currentPage, limit);
   }
 
   @Get('by-plant')
   @ResponseMessage('Lấy danh sách bệnh theo cây trồng thành công')
-  getDiseasesByPlant(@Query('plantId') plantId: number) {
-    return this.diseasesService.getDiseasesByPlant(plantId);
+  getDiseasesByPlant(
+    @Query('page') currentPage: number,
+    @Query('limit') limit: number,
+    @Query('plantId') plantId: number,
+  ) {
+    return this.diseasesService.getDiseasesByPlant(currentPage, limit, plantId);
   }
 
-  @ResponseMessage('Lấy thông tin bệnh cây trồng thành công')
   @Get(':diseaseId')
+  @ResponseMessage('Lấy thông tin bệnh cây trồng thành công')
   findOne(@Param('diseaseId') diseaseId: number) {
     return this.diseasesService.findOne(diseaseId);
   }
 
   @Roles(UserRole.ADMIN)
   @UseInterceptors(FilesInterceptor('images', 5))
-  @Patch('edit/:id')
+  @Patch('edit/:diseaseId')
   @ResponseMessage('Cập nhật thông tin bệnh cây trồng thành công')
   update(
-    @Param('id') diseaseId: number,
+    @Param('diseaseId') diseaseId: number,
     @Body() updateDiseaseDto: UpdateDiseaseDto,
     @UploadedFiles(ImageValidationPipe) images?: Express.Multer.File[],
   ) {

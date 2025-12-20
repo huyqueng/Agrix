@@ -13,6 +13,7 @@ import { User } from './entities/user.entity';
 import { Model } from 'mongoose';
 import { AuthService } from 'auth/auth.service';
 import { Counter } from 'shared/counter.entity';
+import { paginate } from 'shared/pagination.util';
 
 export interface IUSer {
   _id: string;
@@ -65,8 +66,8 @@ export class UsersService {
     return result;
   }
 
-  findAll() {
-    return this.userModel.find().select('-password');
+  async findAll(currentPage: number = 1, limit: number = 10) {
+    return paginate(this.userModel, currentPage, limit);
   }
 
   async findOne(userId: number) {

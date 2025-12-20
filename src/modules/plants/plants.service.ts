@@ -9,6 +9,7 @@ import { Plant } from './entities/plant.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Counter } from '../../shared/counter.entity';
+import { paginate } from 'shared/pagination.util';
 
 @Injectable()
 export class PlantsService {
@@ -37,8 +38,8 @@ export class PlantsService {
     });
   }
 
-  async findAll() {
-    return await this.plantModel.find();
+  async findAll(currentPage: number = 1, limit: number = 10) {
+    return paginate(this.plantModel, currentPage, limit);
   }
 
   async findOne(plantId: string) {

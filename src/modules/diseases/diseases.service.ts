@@ -12,6 +12,7 @@ import { Model } from 'mongoose';
 import { FilesService } from '@modules/files/files.service';
 import { Plant } from '@modules/plants/entities/plant.entity';
 import { Counter } from 'shared/counter.entity';
+import { paginate } from 'shared/pagination.util';
 
 @Injectable()
 export class DiseasesService {
@@ -70,16 +71,20 @@ export class DiseasesService {
     }
   }
 
-  findAll() {
-    return this.diseaseModel.find();
+  findAll(currentPage: number = 1, limit: number = 10) {
+    return paginate(this.diseaseModel, currentPage, limit);
   }
 
-  async getDiseasesByPlant(plantId: number) {
+  async getDiseasesByPlant(
+    currentPage: number = 1,
+    limit: number = 10,
+    plantId: number,
+  ) {
     const plant = await this.plantModel.findOne({ plantId });
     if (!plant) {
       throw new NotFoundException('Cây trồng không tồn tại.');
     }
-    return this.diseaseModel.find({ plantId });
+    return paginate(this.diseaseModel, currentPage, limit, { plantId });
   }
 
   findOne(diseaseId: number) {
