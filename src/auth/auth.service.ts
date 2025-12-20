@@ -35,11 +35,12 @@ export class AuthService {
   }
 
   async login(user: IUSer) {
-    const { _id, email, role, fullName } = user;
+    const { _id, userId, email, role, fullName } = user;
     const payload = {
       sub: 'Token login',
       iss: 'from server',
       _id,
+      userId,
       email,
       fullName,
       role,
@@ -52,6 +53,7 @@ export class AuthService {
       refresh_token,
       user: {
         id: payload._id,
+        userId: payload.userId,
         email,
         fullName,
         role,

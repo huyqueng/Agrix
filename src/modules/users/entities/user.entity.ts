@@ -25,7 +25,7 @@ export class User {
   fullName: string;
 
   @Prop({ trim: true, default: '' })
-  avatarUrl: string;
+  avatar: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

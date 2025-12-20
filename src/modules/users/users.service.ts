@@ -17,10 +17,12 @@ import { paginate } from 'shared/pagination.util';
 
 export interface IUSer {
   _id: string;
+  userId: number;
   email: string;
   password: string;
-  role: string;
   fullName: string;
+  role: string;
+  avatar: string;
 }
 
 @Injectable()
@@ -127,5 +129,30 @@ export class UsersService {
       throw new NotFoundException('Không tìm thấy người dùng.');
     }
     return this.userModel.deleteOne({ userId });
+  }
+
+  async updateMe(userId: number, updateUserDto: UpdateUserDto) {
+    // Xóa field không cho phép
+    delete updateUserDto.role;
+    delete updateUserDto.password;
+
+    if (updateUserDto.email) {
+      const existing = await this.userModel.findOne({
+        email: updateUserDto.email,
+        userId: { $ne: userId },
+      });
+      if (existing)
+        throw new ConflictException(
+          'Email đã tồn tại, vui lòng sử dụng email khác.',
+        );
+    }
+
+    const updatedUser = await this.userModel
+      .findOneAndUpdate({ userId }, updateUserDto, { new: true })
+      .select('-password');
+
+    if (!updatedUser) throw new NotFoundException('Người dùng không tồn tại.');
+
+    return updatedUser;
   }
 }
