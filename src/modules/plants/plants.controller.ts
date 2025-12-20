@@ -17,6 +17,7 @@ import { UpdatePlantDto } from './dto/update-plant.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ResponseMessage } from 'common/decorators/response-message.decorator';
 import { ImageValidationPipe } from 'common/pipes/image-validation.pipe';
+import { ApiQuery } from '@nestjs/swagger';
 
 @Controller('plants')
 export class PlantsController {
@@ -29,6 +30,8 @@ export class PlantsController {
   }
 
   @Get()
+  @ApiQuery({ name: 'page', type: Number, example: 1, required: false })
+  @ApiQuery({ name: 'limit', type: Number, example: 10, required: false })
   @ResponseMessage('Lấy danh sách cây trồng')
   findAll(@Query('page') currentPage: number, @Query('limit') limit: number) {
     return this.plantsService.findAll(currentPage, limit);
