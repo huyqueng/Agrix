@@ -10,6 +10,7 @@ import { PlantsModule } from './modules/plants/plants.module';
 import { FilesModule } from '@modules/files/files.module';
 import { Roles } from 'auth/auth.decorator';
 import { RolesModule } from '@modules/roles/roles.module';
+import { DiagnosisModule } from '@modules/diagnosis/diagnosis.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { RolesModule } from '@modules/roles/roles.module';
     PlantsModule,
     FilesModule,
     RolesModule,
+    DiagnosisModule,
   ],
   controllers: [AppController],
   providers: [AppService],

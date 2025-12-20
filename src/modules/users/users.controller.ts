@@ -18,6 +18,7 @@ import { ResponseMessage } from 'common/decorators/response-message.decorator';
 import { UserRole } from '@modules/roles/roles.service';
 import { JwtService } from '@nestjs/jwt';
 import type { Response } from 'express';
+import { ApiQuery } from '@nestjs/swagger';
 // import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
@@ -37,6 +38,8 @@ export class UsersController {
   @Roles(UserRole.ADMIN)
   @ResponseMessage('Lấy danh sách người dùng thành công')
   @Get()
+  @ApiQuery({ name: 'page', type: Number, example: 1, required: false })
+  @ApiQuery({ name: 'limit', type: Number, example: 10, required: false })
   findAll(@Query('page') currentPage: number, @Query('limit') limit: number) {
     return this.usersService.findAll(currentPage, limit);
   }

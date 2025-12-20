@@ -18,6 +18,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ResponseMessage } from 'common/decorators/response-message.decorator';
 import { ImageValidationPipe } from 'common/pipes/image-validation.pipe';
 import { UserRole } from '@modules/roles/roles.service';
+import { ApiQuery } from '@nestjs/swagger';
 
 @Controller('diseases')
 export class DiseasesController {
@@ -36,11 +37,15 @@ export class DiseasesController {
 
   @Get()
   @ResponseMessage('Lấy danh sách bệnh cây trồng thành công')
+  @ApiQuery({ name: 'page', type: Number, example: 1, required: false })
+  @ApiQuery({ name: 'limit', type: Number, example: 10, required: false })
   findAll(@Query('page') currentPage: number, @Query('limit') limit: number) {
     return this.diseasesService.findAll(currentPage, limit);
   }
 
   @Get('by-plant')
+  @ApiQuery({ name: 'page', type: Number, example: 1, required: false })
+  @ApiQuery({ name: 'limit', type: Number, example: 10, required: false })
   @ResponseMessage('Lấy danh sách bệnh theo cây trồng thành công')
   getDiseasesByPlant(
     @Query('page') currentPage: number,
