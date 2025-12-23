@@ -66,7 +66,13 @@ export class UsersController {
   @Get('/profile/me')
   @ResponseMessage('Lấy thông tin cá nhân thành công')
   async getMe(@User() user: IUSer) {
-    return user;
+    return {
+      userId: user.userId,
+      email: user.email,
+      fullName: user.fullName,
+      role: user.role,
+      avatar: user.avatar,
+    };
   }
 
   @Patch('me/edit')
