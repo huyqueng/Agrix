@@ -8,13 +8,18 @@ import { RolesGuard } from './auth/guards/roles.guard';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { JwtService } from '@nestjs/jwt';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
+  const jwtService = app.get(JwtService);
 
   const reflector = app.get(Reflector);
-  app.useGlobalGuards(new JWTAuthGuard(reflector), new RolesGuard(reflector));
+  app.useGlobalGuards(
+    new JWTAuthGuard(reflector, configService, jwtService),
+    new RolesGuard(reflector),
+  );
 
   app.useGlobalPipes(new ValidationPipe());
 
