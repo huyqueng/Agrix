@@ -11,6 +11,7 @@ import { FilesModule } from '@modules/files/files.module';
 import { Roles } from 'auth/auth.decorator';
 import { RolesModule } from '@modules/roles/roles.module';
 import { DiagnosisModule } from '@modules/diagnosis/diagnosis.module';
+import { PostsModule } from '@modules/posts/posts.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { DiagnosisModule } from '@modules/diagnosis/diagnosis.module';
     FilesModule,
     RolesModule,
     DiagnosisModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

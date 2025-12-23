@@ -20,7 +20,7 @@ export class CreateDiseaseDto {
   @ApiProperty({ example: 'Sử dụng thuốc trừ nấm, vệ sinh đồng ruộng' })
   treatment: string;
 
-  @IsNotEmpty({ message: 'Vui lòng chọn cây trồng' })
+  @IsNotEmpty({ message: 'Vui lòng chọn cây trồng.' })
   @ApiProperty({ example: '1' })
   plantId: number;
 
