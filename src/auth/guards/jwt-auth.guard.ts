@@ -53,6 +53,7 @@ export class JWTAuthGuard extends AuthGuard('jwt') {
         const newAccessToken = this.jwtService.sign(
           {
             _id: payload._id,
+            userId: payload.userId,
             email: payload.email,
             fullName: payload.fullName,
             role: payload.role,
@@ -64,8 +65,8 @@ export class JWTAuthGuard extends AuthGuard('jwt') {
         response.cookie('access_token', newAccessToken, {
           httpOnly: true,
           maxAge: 15 * 60 * 1000,
-          sameSite: 'lax',
-          secure: true,
+          sameSite: 'none',
+          // secure: true,
         });
 
         request.user = payload;

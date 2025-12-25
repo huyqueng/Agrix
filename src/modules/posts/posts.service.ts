@@ -7,16 +7,23 @@ import { Model } from 'mongoose';
 import { Counter } from 'shared/counter.entity';
 import { FilesService } from '@modules/files/files.service';
 import { paginate } from 'shared/pagination.util';
+import { IUSer } from '@modules/users/users.service';
+import { User } from '@modules/users/entities/user.entity';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(Counter.name) private counterModel: Model<Counter>,
+    @InjectModel(User.name) private userModel: Model<User>,
     private readonly filesService: FilesService,
   ) {}
 
-  async create(createPostDto: CreatePostDto, images: Express.Multer.File[]) {
+  async create(
+    createPostDto: CreatePostDto,
+    user: IUSer,
+    images: Express.Multer.File[],
+  ) {
     const imageUrls = await this.filesService.uploadImages(images);
     const counter = await this.counterModel.findOneAndUpdate(
       { _id: 'postId' },
@@ -25,6 +32,7 @@ export class PostsService {
     );
     return this.postModel.create({
       postId: counter.seq,
+      userId: user.userId,
       ...createPostDto,
       images: imageUrls,
     });
@@ -37,7 +45,12 @@ export class PostsService {
   async findOne(postId: number) {
     const post = await this.postModel.findOne({ postId });
     if (!post) throw new NotFoundException('Bài viết không tồn tại.');
-    return post;
+
+    const uploadBy = await this.userModel
+      .findOne({ userId: post.userId })
+      .select('userId fullName avatar');
+
+    return { ...post.toObject(), uploadBy };
   }
 
   async update(
@@ -62,5 +75,44 @@ export class PostsService {
   async remove(postId: number) {
     await this.findOne(postId);
     return this.postModel.findOneAndDelete({ postId });
+  }
+
+  async likePost(postId: number, user: IUSer) {
+    const post = await this.findOne(postId);
+    const userId = user.userId;
+    const liked = post.likedBy.includes(userId); //kiem tra da like chua
+
+    if (liked) {
+      await this.postModel.updateOne(
+        { postId },
+        { $pull: { likedBy: userId }, $inc: { likesCount: -1 } },
+      );
+    } else {
+      await this.postModel.updateOne(
+        { postId },
+        { $addToSet: { likedBy: userId }, $inc: { likesCount: 1 } },
+      );
+    }
+
+    return { liked: !liked };
+  }
+
+  async getLikedUsers(
+    postId: number,
+    currentPage: number = 1,
+    limit: number = 20,
+  ) {
+    const post = await this.findOne(postId);
+    if (!post.likedBy || post.likedBy.length === 0) {
+      return { message: 'Bài viết chưa có người thích', data: [] };
+    }
+
+    return paginate(
+      this.userModel,
+      currentPage,
+      limit,
+      { userId: post.likedBy },
+      'userId fullName avatar',
+    );
   }
 }
