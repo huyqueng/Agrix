@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsString,
-  IsArray,
-  IsUrl,
-  IsOptional,
-} from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateDiseaseDto {
   @IsNotEmpty({ message: 'Tên bệnh không được để trống.' })

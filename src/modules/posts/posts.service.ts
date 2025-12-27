@@ -9,6 +9,7 @@ import { FilesService } from '@modules/files/files.service';
 import { paginate } from 'shared/pagination.util';
 import { IUSer } from '@modules/users/users.service';
 import { User } from '@modules/users/entities/user.entity';
+import { PostLike } from './entities/like.entity';
 
 @Injectable()
 export class PostsService {
@@ -16,6 +17,7 @@ export class PostsService {
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(Counter.name) private counterModel: Model<Counter>,
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(PostLike.name) private postLikeModel: Model<PostLike>,
     private readonly filesService: FilesService,
   ) {}
 
@@ -78,23 +80,18 @@ export class PostsService {
   }
 
   async likePost(postId: number, user: IUSer) {
-    const post = await this.findOne(postId);
     const userId = user.userId;
-    const liked = post.likedBy.includes(userId); //kiem tra da like chua
+    const existingLike = await this.postLikeModel.findOne({ postId, userId });
 
-    if (liked) {
-      await this.postModel.updateOne(
-        { postId },
-        { $pull: { likedBy: userId }, $inc: { likesCount: -1 } },
-      );
+    if (existingLike) {
+      await this.postLikeModel.deleteOne({ postId, userId });
+      await this.postModel.updateOne({ postId }, { $inc: { likesCount: -1 } });
+      return { liked: false };
     } else {
-      await this.postModel.updateOne(
-        { postId },
-        { $addToSet: { likedBy: userId }, $inc: { likesCount: 1 } },
-      );
+      await this.postLikeModel.create({ postId, userId });
+      await this.postModel.updateOne({ postId }, { $inc: { likesCount: 1 } });
+      return { liked: true };
     }
-
-    return { liked: !liked };
   }
 
   async getLikedUsers(
@@ -102,16 +99,14 @@ export class PostsService {
     currentPage: number = 1,
     limit: number = 20,
   ) {
-    const post = await this.findOne(postId);
-    if (!post.likedBy || post.likedBy.length === 0) {
-      return { message: 'Bài viết chưa có người thích', data: [] };
-    }
+    const likes = await this.postLikeModel.find({ postId }).select('userId');
+    const userIds = likes.map((like) => like.userId);
 
     return paginate(
       this.userModel,
       currentPage,
       limit,
-      { userId: post.likedBy },
+      { userId: { $in: userIds } },
       'userId fullName avatar',
     );
   }
