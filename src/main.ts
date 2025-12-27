@@ -16,10 +16,7 @@ async function bootstrap() {
   const jwtService = app.get(JwtService);
 
   const reflector = app.get(Reflector);
-  app.useGlobalGuards(
-    new JWTAuthGuard(reflector, configService, jwtService),
-    new RolesGuard(reflector),
-  );
+  app.useGlobalGuards(new JWTAuthGuard(reflector), new RolesGuard(reflector));
 
   app.useGlobalPipes(new ValidationPipe());
 

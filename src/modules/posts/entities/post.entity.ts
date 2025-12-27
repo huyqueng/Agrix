@@ -9,16 +9,10 @@ export class Post {
   userId: number;
 
   @Prop()
-  title: string;
-
-  @Prop()
   content: string;
 
   @Prop({ type: [String], default: [] })
   images: string[];
-
-  @Prop({ default: [] })
-  likedBy: number[];
 
   @Prop({ default: 0 })
   likesCount: number;
