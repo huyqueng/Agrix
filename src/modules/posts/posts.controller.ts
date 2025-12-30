@@ -83,4 +83,16 @@ export class PostsController {
   ) {
     return this.postsService.getLikedUsers(postId, currentPage, limit);
   }
+
+  @Get('my-posts')
+  @ApiQuery({ name: 'page', type: Number, example: 1, required: false })
+  @ApiQuery({ name: 'limit', type: Number, example: 10, required: false })
+  @ResponseMessage('Lấy danh sách bài viết của người dùng thành công')
+  getMyPosts(
+    @Query('page') currentPage: number,
+    @Query('limit') limit: number,
+    @User() user: IUSer,
+  ) {
+    return this.postsService.getMyPosts(currentPage, limit, user);
+  }
 }

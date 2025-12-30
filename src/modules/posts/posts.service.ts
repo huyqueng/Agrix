@@ -110,4 +110,10 @@ export class PostsService {
       'userId fullName avatar',
     );
   }
+
+  getMyPosts(currentPage: number = 1, limit: number = 10, user: IUSer) {
+    return paginate(this.postModel, currentPage, limit, {
+      userId: user.userId,
+    });
+  }
 }
