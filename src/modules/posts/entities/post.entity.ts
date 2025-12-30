@@ -8,7 +8,7 @@ export class Post {
   @Prop()
   userId: number;
 
-  @Prop()
+  @Prop({ trim: true })
   content: string;
 
   @Prop({ type: [String], default: [] })

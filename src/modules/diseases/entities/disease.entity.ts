@@ -5,13 +5,13 @@ export class Disease {
   @Prop()
   diseaseId: number;
 
-  @Prop()
+  @Prop({ trim: true })
   name: string;
 
-  @Prop()
+  @Prop({ trim: true })
   symptoms: string;
 
-  @Prop()
+  @Prop({ trim: true })
   treatment: string;
 
   @Prop()
