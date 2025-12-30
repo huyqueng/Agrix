@@ -101,7 +101,7 @@ export class UsersController {
     res.cookie('access_token', newAccessToken, {
       httpOnly: true,
       maxAge: 15 * 60 * 1000,
-      sameSite: 'none',
+      // sameSite: 'none',
       // secure: true,
     });
 
