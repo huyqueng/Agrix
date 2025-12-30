@@ -47,14 +47,14 @@ export class AuthController {
       httpOnly: true,
       maxAge: 15 * 60 * 1000, // 15m
       sameSite: 'none',
-      secure: true,
+      // secure: true,
     });
 
     res.cookie('refresh_token', user.refresh_token, {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30d
       sameSite: 'none',
-      secure: true,
+      // secure: true,
     });
 
     return user;
@@ -105,7 +105,7 @@ export class AuthController {
         httpOnly: true,
         maxAge: 15 * 60 * 1000, // 15m
         sameSite: 'none',
-        secure: true,
+        // secure: true,
       });
 
       return { access_token: newAccessToken };
