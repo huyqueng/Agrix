@@ -41,7 +41,9 @@ export class PostsService {
   }
 
   findAll(currentPage: number = 1, limit: number = 10) {
-    return paginate(this.postModel, currentPage, limit);
+    return paginate(this.postModel, currentPage, limit, {}, '', {
+      createdAt: -1,
+    });
   }
 
   async findOne(postId: number) {

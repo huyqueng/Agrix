@@ -21,7 +21,7 @@ export class CommentsService {
     user: IUSer,
     postId: number,
     createCommentDto: CreateCommentDto,
-    images: Express.Multer.File[],
+    images: Express.Multer.File[] = [],
   ) {
     const counter = await this.counterModel.findOneAndUpdate(
       { _id: 'commentId' },
@@ -46,7 +46,7 @@ export class CommentsService {
   }
 
   findAll(currentPage: number = 1, limit: number = 20) {
-    return paginate(this.commentModel, currentPage, limit);
+    return paginate(this.postModel, currentPage, limit);
   }
 
   async getCommentsByPost(
@@ -120,7 +120,6 @@ export class CommentsService {
     currentPage: number = 1,
     limit: number = 5,
   ) {
-    console.log('🚀 ~ CommentsService ~ getReplies ~ parentId:', parentId);
     await this.findOne(parentId);
 
     return paginate(this.commentModel, currentPage, limit, { parentId });

@@ -20,8 +20,8 @@ export class Disease {
   @Prop()
   plantId: number;
 
-  // @Prop()
-  // plantName: string;
+  @Prop()
+  className: string;
 }
 
 export const DiseaseSchema = SchemaFactory.createForClass(Disease);

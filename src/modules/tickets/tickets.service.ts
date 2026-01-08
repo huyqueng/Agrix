@@ -7,12 +7,6 @@ import { Ticket } from './entities/ticket.entity';
 import { Model } from 'mongoose';
 import { FilesService } from '@modules/files/files.service';
 
-enum TicketStatus {
-  OPEN = 'open',
-  PENDING = 'pending',
-  CLOSED = 'closed',
-}
-
 @Injectable()
 export class TicketsService {
   constructor(

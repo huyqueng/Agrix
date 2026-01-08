@@ -6,10 +6,11 @@ export async function paginate<T>(
   limit: number = 10,
   query = {},
   select = '-password',
+  sort = {},
 ) {
   const skip = (page - 1) * limit;
   const [items, total] = await Promise.all([
-    model.find(query).skip(skip).limit(limit).select(select),
+    model.find(query).skip(skip).limit(limit).select(select).sort(sort),
     model.countDocuments(query),
   ]);
 
