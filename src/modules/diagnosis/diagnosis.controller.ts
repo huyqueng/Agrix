@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { DiagnosisService } from './diagnosis.service';
 import { UpdateDiagnosisDto } from './dto/update-diagnosis.dto';
@@ -27,26 +28,24 @@ export class DiagnosisController {
     return this.diagnosisService.create(user, image);
   }
 
-  @Get()
-  findAll() {
-    return this.diagnosisService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.diagnosisService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateDiagnosisDto: UpdateDiagnosisDto,
+  @Get('get-diagnosis')
+  @ResponseMessage('Lấy danh sách lịch sử chuẩn đoán thành công')
+  findAll(
+    @User() user: IUSer,
+    @Query('page') currentPage: number,
+    @Query('limit') limit: number,
   ) {
-    return this.diagnosisService.update(+id, updateDiagnosisDto);
+    return this.diagnosisService.findAll(user, currentPage, limit);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.diagnosisService.remove(+id);
+  @Get('get-detail/:diagnosisId')
+  @ResponseMessage('Lấy thông tin chi tiết chuẩn đoán thành công')
+  findOne(@Param('diagnosisId') diagnosisId: number) {
+    return this.diagnosisService.findOne(diagnosisId);
+  }
+
+  @Delete('/delete/:diagnosisId')
+  remove(@Param('diagnosisId') diagnosisId: number) {
+    return this.diagnosisService.remove(diagnosisId);
   }
 }

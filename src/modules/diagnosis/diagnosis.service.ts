@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdateDiagnosisDto } from './dto/update-diagnosis.dto';
 import type { IUSer } from '@modules/users/users.service';
 import { FilesService } from '@modules/files/files.service';
@@ -12,6 +16,7 @@ import { Model } from 'mongoose';
 import { Counter } from 'shared/counter.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Diagnosis } from './entities/diagnosis.entity';
+import { paginate } from 'shared/pagination.util';
 
 export const TRANSLATIONS = {
   sucking_insects: 'Côn trùng trích hút',
@@ -114,21 +119,33 @@ export class DiagnosisService {
     };
 
     const savedDiagnosis = await this.diagnosisModel.create(diagnosisData);
+
+    return savedDiagnosis;
   }
 
-  findAll() {
-    return `This action returns all diagnosis`;
+  findAll(user: IUSer, currentPage: number = 1, limit: number = 10) {
+    return paginate(
+      this.diagnosisModel,
+      currentPage,
+      limit,
+      {
+        userId: user.userId,
+      },
+      '-detected_diseases -full_analysis -details -meta',
+      { createdAt: -1 },
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} diagnosis`;
+  async findOne(diagnosisId: number) {
+    const diagnosis = await this.diagnosisModel.findOne({ diagnosisId });
+    if (!diagnosis) {
+      throw new NotFoundException('Không tìm thấy kết quả chuẩn đoán');
+    }
+    return diagnosis;
   }
 
-  update(id: number, updateDiagnosisDto: UpdateDiagnosisDto) {
-    return `This action updates a #${id} diagnosis`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} diagnosis`;
+  async remove(diagnosisId: number) {
+    await this.findOne(diagnosisId);
+    return this.diagnosisModel.findOneAndDelete({ diagnosisId });
   }
 }
