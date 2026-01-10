@@ -48,4 +48,10 @@ export class DiagnosisController {
   remove(@Param('diagnosisId') diagnosisId: number) {
     return this.diagnosisService.remove(diagnosisId);
   }
+
+  @Get('get-list')
+  @ResponseMessage('Lấy danh sách chuẩn đoán thành công')
+  getList(@Query('page') currentPage: number, @Query('limit') limit: number) {
+    return this.diagnosisService.getList(currentPage, limit);
+  }
 }

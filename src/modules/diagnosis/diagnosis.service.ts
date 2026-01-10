@@ -148,4 +148,14 @@ export class DiagnosisService {
     await this.findOne(diagnosisId);
     return this.diagnosisModel.findOneAndDelete({ diagnosisId });
   }
+
+  getList(currentPage: number = 1, limit: number = 10) {
+    return paginate(
+      this.diagnosisModel,
+      currentPage,
+      limit,
+      {},
+      '-detected_diseases -full_analysis -details -meta',
+    );
+  }
 }
