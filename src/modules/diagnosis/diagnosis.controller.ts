@@ -16,6 +16,7 @@ import { ResponseMessage } from 'common/decorators/response-message.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from 'auth/auth.decorator';
 import type { IUSer } from '@modules/users/users.service';
+import { ImageValidationPipe } from 'common/pipes/image-validation.pipe';
 
 @Controller('diagnosis')
 export class DiagnosisController {
@@ -24,7 +25,10 @@ export class DiagnosisController {
   @Post('create/cucumber')
   @ResponseMessage('Chuẩn đoán bệnh thành công')
   @UseInterceptors(FileInterceptor('image'))
-  create(@User() user: IUSer, @UploadedFile() image: Express.Multer.File) {
+  create(
+    @User() user: IUSer,
+    @UploadedFile(ImageValidationPipe) image: Express.Multer.File,
+  ) {
     return this.diagnosisService.create(user, image);
   }
 

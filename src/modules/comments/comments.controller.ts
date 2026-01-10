@@ -17,6 +17,7 @@ import { ResponseMessage } from 'common/decorators/response-message.decorator';
 import { User } from 'auth/auth.decorator';
 import type { IUSer } from '@modules/users/users.service';
 import { ApiQuery } from '@nestjs/swagger';
+import { ImageValidationPipe } from 'common/pipes/image-validation.pipe';
 
 @Controller('comments')
 export class CommentsController {
@@ -29,7 +30,7 @@ export class CommentsController {
     @User() user: IUSer,
     @Param('postId') postId: number,
     @Body() createCommentDto: CreateCommentDto,
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles(ImageValidationPipe) images: Express.Multer.File[],
   ) {
     return this.commentsService.create(user, postId, createCommentDto, images);
   }
@@ -73,7 +74,7 @@ export class CommentsController {
     @User() user: IUSer,
     @Param('parentId') parentId: number,
     @Body() createCommentDto: CreateCommentDto,
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles(ImageValidationPipe) images: Express.Multer.File[],
   ) {
     return this.commentsService.reply(user, parentId, createCommentDto, images);
   }

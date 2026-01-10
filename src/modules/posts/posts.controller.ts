@@ -19,6 +19,7 @@ import { ApiQuery } from '@nestjs/swagger';
 import { ResponseMessage } from 'common/decorators/response-message.decorator';
 import type { IUSer } from '@modules/users/users.service';
 import { User } from 'auth/auth.decorator';
+import { ImageValidationPipe } from 'common/pipes/image-validation.pipe';
 
 @Controller('posts')
 export class PostsController {
@@ -29,7 +30,7 @@ export class PostsController {
   @UseInterceptors(FilesInterceptor('images', 5))
   async create(
     @Body() createPostDto: CreatePostDto,
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles(ImageValidationPipe) images: Express.Multer.File[],
     @User() user: IUSer,
   ) {
     return this.postsService.create(createPostDto, user, images);
@@ -55,7 +56,7 @@ export class PostsController {
   update(
     @Param('postId') postId: number,
     @Body() updatePostDto: UpdatePostDto,
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles(ImageValidationPipe) images: Express.Multer.File[],
   ) {
     return this.postsService.update(postId, updatePostDto, images);
   }

@@ -5,12 +5,17 @@ export class ImageValidationPipe implements PipeTransform {
   private readonly MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   private readonly ALLOWED_TYPES = /(jpeg|jpg|png|webp)$/i;
 
-  transform(images?: Express.Multer.File[]): Express.Multer.File[] | undefined {
+  transform(
+    images?: Express.Multer.File | Express.Multer.File[],
+  ): Express.Multer.File | Express.Multer.File[] | undefined {
     if (!images) {
       return undefined;
     }
 
-    images.forEach((image) => {
+    // Handle both single file and multiple files
+    const fileArray = Array.isArray(images) ? images : [images];
+
+    fileArray.forEach((image) => {
       //Check type
       const mimetype = image.mimetype.split('/')[1];
       if (!this.ALLOWED_TYPES.test(mimetype)) {
