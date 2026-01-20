@@ -64,6 +64,7 @@ export class DiseasesService {
         diseaseId: counter.seq,
         ...creatediseaseDto,
         plantId: creatediseaseDto.plantId,
+        plantName: plant.name,
         images: imgUrls,
       });
     } catch (error) {
@@ -122,6 +123,21 @@ export class DiseasesService {
       }
     }
 
+    // Get plant name if plantId is provided in update
+    let plantName = disease.plantName;
+    if (
+      updateDiseaseDto.plantId &&
+      updateDiseaseDto.plantId !== disease.plantId
+    ) {
+      const plant = await this.plantModel.findOne({
+        plantId: updateDiseaseDto.plantId,
+      });
+      if (!plant) {
+        throw new NotFoundException('Cây trồng không tồn tại.');
+      }
+      plantName = plant.name;
+    }
+
     // Update without images
     if (!images) {
       const currentImgs = disease.images;
@@ -129,6 +145,7 @@ export class DiseasesService {
         { diseaseId },
         {
           ...updateDiseaseDto,
+          plantName,
           images: currentImgs,
         },
       );
@@ -142,6 +159,7 @@ export class DiseasesService {
         { diseaseId },
         {
           ...updateDiseaseDto,
+          plantName,
           images: imageUrls,
         },
       );

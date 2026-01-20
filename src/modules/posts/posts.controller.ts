@@ -40,14 +40,18 @@ export class PostsController {
   @ApiQuery({ name: 'page', type: Number, example: 1, required: false })
   @ApiQuery({ name: 'limit', type: Number, example: 10, required: false })
   @ResponseMessage('Lấy danh sách bài viết thành công')
-  findAll(@Query('page') currentPage: number, @Query('limit') limit: number) {
-    return this.postsService.findAll(currentPage, limit);
+  findAll(
+    @Query('page') currentPage: number,
+    @Query('limit') limit: number,
+    @User() user?: IUSer,
+  ) {
+    return this.postsService.findAll(currentPage, limit, user);
   }
 
   @Get('get-detail/:postId')
   @ResponseMessage('Lấy thông tin bài viết thành công')
-  findOne(@Param('postId') postId: number) {
-    return this.postsService.findOne(postId);
+  findOne(@Param('postId') postId: number, @User() user?: IUSer) {
+    return this.postsService.findOne(postId, user);
   }
 
   @Patch('edit/:postId')

@@ -21,6 +21,9 @@ export class Disease {
   plantId: number;
 
   @Prop()
+  plantName: string;
+
+  @Prop()
   className: string;
 }
 

@@ -17,6 +17,9 @@ export class Post {
   @Prop({ default: 0 })
   likesCount: number;
 
+  @Prop({ default: false })
+  isLiked: boolean;
+
   @Prop({ default: 0 })
   commentsCount: number;
 }

@@ -40,13 +40,34 @@ export class PostsService {
     });
   }
 
-  findAll(currentPage: number = 1, limit: number = 10) {
-    return paginate(this.postModel, currentPage, limit, {}, '', {
+  async findAll(currentPage: number = 1, limit: number = 10, user?: IUSer) {
+    const result = await paginate(this.postModel, currentPage, limit, {}, '', {
       createdAt: -1,
     });
+
+    if (!user) {
+      return result;
+    }
+
+    // Add isLiked for each post
+    const posts = result.items.map(async (post) => {
+      const like = await this.postLikeModel.findOne({
+        postId: post.postId,
+        userId: user.userId,
+      });
+      return {
+        ...post.toObject(),
+        isLiked: !!like,
+      };
+    });
+
+    return {
+      ...result,
+      items: await Promise.all(posts),
+    };
   }
 
-  async findOne(postId: number) {
+  async findOne(postId: number, user?: IUSer) {
     const post = await this.postModel.findOne({ postId });
     if (!post) throw new NotFoundException('Bài viết không tồn tại.');
 
@@ -54,7 +75,16 @@ export class PostsService {
       .findOne({ userId: post.userId })
       .select('userId fullName avatar');
 
-    return { ...post.toObject(), uploadBy };
+    let isLiked = false;
+    if (user) {
+      const like = await this.postLikeModel.findOne({
+        postId: post.postId,
+        userId: user.userId,
+      });
+      isLiked = !!like;
+    }
+
+    return { ...post.toObject(), uploadBy, isLiked };
   }
 
   async update(
@@ -113,9 +143,26 @@ export class PostsService {
     );
   }
 
-  getMyPosts(currentPage: number = 1, limit: number = 10, user: IUSer) {
-    return paginate(this.postModel, currentPage, limit, {
+  async getMyPosts(currentPage: number = 1, limit: number = 10, user: IUSer) {
+    const result = await paginate(this.postModel, currentPage, limit, {
       userId: user.userId,
     });
+
+    // Add isLiked for each post
+    const posts = result.items.map(async (post) => {
+      const like = await this.postLikeModel.findOne({
+        postId: post.postId,
+        userId: user.userId,
+      });
+      return {
+        ...post.toObject(),
+        isLiked: !!like,
+      };
+    });
+
+    return {
+      ...result,
+      items: await Promise.all(posts),
+    };
   }
 }
